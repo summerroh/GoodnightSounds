@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, FlatList, Text, TouchableOpacity, SectionList } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, FlatList, Text, TouchableOpacity, SectionList, Button } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Audio } from 'expo-av';
 
 import Screen from '../conponents/Screen'
+
+const music1 = require('../../assets/nujabes1.mp3');
+const music2 = require('../../assets/nujabes2.mp3');
 
 
 const sounds = [
@@ -116,7 +120,10 @@ const sounds = [
 ]
 
 function SoundsScreen() {
-  
+  const [playbackObj, setPlaybackObj] = useState(null);
+  const [soundObj, setSoundObj] = useState(null);
+  const [currentAudio, setCurrentAudio] = useState({});
+
   const [selectedName, setSelectedName] = useState(null);
 
   
@@ -149,9 +156,68 @@ function SoundsScreen() {
     )
   }
 
+
+
+
+
+
+
+
+//playing sound starts
+//tutorial: https://www.youtube.com/watch?v=HCvp2fZh--A
+useEffect(()=>{
+  Audio.setAudioModeAsync({
+    allowsRecordingIOS: false,
+    interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
+    playsInSilentModeIOS: true,
+    interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS,
+    shouldDuckAndroid: true,
+    staysActiveInBackground: false,
+    playThroughEarpieceAndroid: false
+  });
+  
+},[])
+
+//tutorial: https://www.youtube.com/watch?v=NBTj23qe7BA
+const handleAudioPress = async (audio) => {
+  //playing audio for the first time.
+  if(soundObj === null) {
+    const playbackObj = new Audio.Sound();
+
+    const status = await playbackObj.loadAsync(
+      audio,
+      { shouldPlay: true }
+    );
+    setCurrentAudio(audio);
+    setPlaybackObj(playbackObj);
+    setSoundObj(status);
+    return
+  };
+
+  //pause audio
+  if(soundObj.isLoaded && soundObj.isPlaying) {
+    const status = await playbackObj.setStatusAsync({ shouldPlay: false });
+    return setSoundObj(status);
+  }
+
+  //resume audio
+  if(soundObj.isLoaded &&
+     !soundObj.isPlaying &&
+     currentAudio === audio ) {
+       const status = await playbackObj.playAsync();
+       return setSoundObj(status);
+     }  
+};
+
+//playing sound finishes
+
+
+
   return (
     <Screen style={styles.screen}>
       <View style={styles.container}>
+
+        <Button onPress={() => handleAudioPress(music1)} title='test sound!'></Button>
         
         <SectionList
           ListHeaderComponent={<Text style={styles.screenHeader}>Sounds</Text>}
