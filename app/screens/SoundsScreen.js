@@ -178,6 +178,7 @@ useEffect(()=>{
   
 },[])
 
+
 //tutorial: https://www.youtube.com/watch?v=NBTj23qe7BA
 const handleAudioPress = async (audio) => {
   //playing audio for the first time.
