@@ -1,0 +1,9 @@
+SoundScreen.js
+238
+오디오 멀티플 재생은 되는데 그걸 언로드할방법을 찾아야함
+
+    currentAudios.includes(audio)
+      ? setCurrentAudios(currentAudios.filter((item) => audio !== item))
+      : setCurrentAudios(prevArray => [...prevArray, audio]);
+
+이 로직들에서 ? 앞에부분에 언로드도 포함해야함?

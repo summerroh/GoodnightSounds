@@ -15,38 +15,58 @@ const sounds = [
     data: [[
       
         {name: 'Rain',
-        iconName: 'weather-rainy'},
+        iconName: 'weather-rainy',
+        music: music1
+        },
       
         {name: 'Bird',
-        iconName: 'airplane'},
+        iconName: 'airplane',
+        music: music2
+        },
       
         {name: 'Thunder',
-        iconName: 'cloud'},
+        iconName: 'cloud',
+        music: music1
+        },
       
         {name: 'Snow',
-        iconName: 'weather-rainy'},
+        iconName: 'weather-rainy',
+        music: music2,
+        },
       
         {name: 'Puddle',
-        iconName: 'airplane'},
+        iconName: 'airplane',
+        music: music1,
+        },
       
         {name: 'Lake',
-        iconName: 'cloud'},
+        iconName: 'cloud',
+        music: music2,
+      },
       ]]
   },
   {
     title: "Train Sounds",
     data: [[
         {name: 'Train',
-        iconName: 'weather-rainy'},
+        iconName: 'weather-rainy',
+        music: music1,
+        },
       
         {name: 'Subway',
-        iconName: 'airplane'},
+        iconName: 'airplane',
+        music: music2,
+        },
       
         {name: 'Car',
-        iconName: 'cloud'},
+        iconName: 'cloud',
+        music: music1,
+        },
 
         {name: 'Airplane',
-        iconName: 'weather-rainy'},
+        iconName: 'weather-rainy',
+        music: music2,
+        },
       
         {name: 'City',
         iconName: 'airplane'},
@@ -120,19 +140,29 @@ const sounds = [
 ]
 
 function SoundsScreen() {
-  const [playbackObj, setPlaybackObj] = useState(null);
-  const [soundObj, setSoundObj] = useState(null);
-  const [currentAudio, setCurrentAudio] = useState({});
+  const [playbackObjs, setPlaybackObjs] = useState([]);
+  const [soundObjs, setSoundObjs] = useState([]);
+  const [currentAudios, setCurrentAudios] = useState([{}]);
 
-  const [selectedName, setSelectedName] = useState(null);
+  const [selectedName, setSelectedName] = useState([]);
 
-  
+  // soundcard들을 렌더링하는 function
   const renderItem = ({ item }) => {
-    const backgroundColor = item.name === selectedName ? "lightgray" : "#fff";
-    const color = item.name === selectedName ? 'white' : 'black';
+    // selectedName 안에 item.name이 있나 없나 확인하고 background랑 color 색상 토글하기
+    const backgroundColor = selectedName.includes(item.name)  ? "lightgray" : "#fff";
+    const color = selectedName.includes(item.name) ? 'white' : 'black';
+
+    const handleSoundCardPress = (itemName, itemMusic) => {
+
+      selectedName.includes(item.name)
+      ? setSelectedName(selectedName.filter((item) => itemName !== item))
+      : setSelectedName(prevArray => [...prevArray, itemName]);
+
+      handleAudioPlayPause(itemMusic);
+    };
 
     return(
-      <TouchableOpacity onPress={() => setSelectedName(item.name)} style={[styles.soundCard, {backgroundColor}]}>
+      <TouchableOpacity onPress={() => handleSoundCardPress(item.name, item.music)} style={[styles.soundCard, {backgroundColor}]}>
               <MaterialCommunityIcons name={item.iconName} size={20} color={color}/>
               <Text style={[{color}]}>{item.name}</Text>
       </TouchableOpacity>
@@ -159,10 +189,6 @@ function SoundsScreen() {
 
 
 
-
-
-
-
 //playing sound starts
 //tutorial: https://www.youtube.com/watch?v=HCvp2fZh--A
 useEffect(()=>{
@@ -172,7 +198,7 @@ useEffect(()=>{
     playsInSilentModeIOS: true,
     interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS,
     shouldDuckAndroid: true,
-    staysActiveInBackground: false,
+    staysActiveInBackground: true,
     playThroughEarpieceAndroid: false
   });
   
@@ -180,35 +206,124 @@ useEffect(()=>{
 
 
 
+
+
 //tutorial: https://www.youtube.com/watch?v=NBTj23qe7BA
-const handleAudioPress = async (audio) => {
+const handleAudioPlayPause = async (audio) => {
+
   //playing audio for the first time.
-  if(soundObj === null) {
+  // if(soundObj === []) {
     const playbackObj = new Audio.Sound();
 
     const status = await playbackObj.loadAsync(
       audio,
       { shouldPlay: true }
     );
-    setCurrentAudio(audio);
-    setPlaybackObj(playbackObj);
-    setSoundObj(status);
-    return
-  };
+
+
+
+    // currentAudios.includes(audio)
+    //   ? setCurrentAudios(currentAudios.filter((item) => audio !== item))
+    //   : setCurrentAudios(prevArray => [...prevArray, audio]);
+
+    playbackObjs.includes(playbackObj)
+      // ? setPlaybackObjs(playbackObjs.filter((item) => playbackObj !== item))
+      ? unloadPlaybackObj(playbackObj)
+      : setPlaybackObjs(prevArray => [...prevArray, playbackObj]);
+
+    console.log(status.uri)
+
+    // const unloadPlaybackObj = async (playbackObj) => {
+    //   setPlaybackObjs(playbackObjs.filter((item) => playbackObj !== item))
+    //   await playbackObj.unloadAsync()
+    // }
+
+
+
+///////////////////////11월 19일 /////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // soundObjs.includes(status)
+    //   ? setSoundObjs(soundObjs.filter((item) => status !== item))
+    //   : setSoundObjs(prevArray => [...prevArray, status]);
+
+    
+
+
+    // setCurrentAudio(prevArray => [...prevArray, audio]);
+    // setPlaybackObj(prevArray => [...prevArray, playbackObj]);
+    // setSoundObj(prevArray => [...prevArray, status]);
+    // return
+  // };
 
   //pause audio
-  if(soundObj.isLoaded && soundObj.isPlaying) {
-    const status = await playbackObj.setStatusAsync({ shouldPlay: false });
-    return setSoundObj(status);
-  }
+  // if(soundObjs.isLoaded && soundObjs.isPlaying) {
+  //   const status = await playbackObj.setStatusAsync({ shouldPlay: false });
+    // return setSoundObj(status);
+  // }
 
-  //resume audio
-  if(soundObj.isLoaded &&
-     !soundObj.isPlaying &&
-     currentAudio === audio ) {
-       const status = await playbackObj.playAsync();
-       return setSoundObj(status);
-     }  
+  // //resume audio
+  // if(soundObj.isLoaded &&
+  //    !soundObj.isPlaying &&
+  //    currentAudio === audio ) {
+  //      const status = await playbackObj.playAsync();
+  //      return setSoundObj(status);
+  //    }  
+
+
+
+
+
+
+
+  // //playing audio for the first time.
+  // if(soundObj === null) {
+  //   const playbackObj = new Audio.Sound();
+
+  //   const status = await playbackObj.loadAsync(
+  //     audio,
+  //     { shouldPlay: true }
+  //   );
+  //   setCurrentAudio(audio);
+  //   setPlaybackObj(playbackObj);
+  //   setSoundObj(status);
+  //   return
+  // };
+
+  // //pause audio
+  // if(soundObj.isLoaded && soundObj.isPlaying) {
+  //   const status = await playbackObj.setStatusAsync({ shouldPlay: false });
+  //   return setSoundObj(status);
+  // }
+
+  // //resume audio
+  // if(soundObj.isLoaded &&
+  //    !soundObj.isPlaying &&
+  //    currentAudio === audio ) {
+  //      const status = await playbackObj.playAsync();
+  //      return setSoundObj(status);
+  //    }  
 };
 
 //playing sound finishes
@@ -219,7 +334,7 @@ const handleAudioPress = async (audio) => {
     <Screen style={styles.screen}>
       <View style={styles.container}>
 
-        <Button onPress={() => handleAudioPress(music1)} title='test sound!'></Button>
+        <Button onPress={() => handleAudioPlayPause(music1)} title='test sound!'></Button>
         
         <SectionList
           ListHeaderComponent={<Text style={styles.screenHeader}>Sounds</Text>}
