@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, FlatList, Text, TouchableOpacity, SectionList, Button } from 'react-native';
+import { View, StyleSheet, FlatList, Text, TouchableOpacity, SectionList, Button, TouchableHighlightBase } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Audio } from 'expo-av';
 
@@ -16,32 +16,38 @@ const sounds = [
       
         {name: 'Rain',
         iconName: 'weather-rainy',
-        music: music1
+        music: music1,
+        sound: {},
         },
       
         {name: 'Bird',
         iconName: 'airplane',
-        music: music2
+        music: music2,
+        sound: {},
         },
       
         {name: 'Thunder',
         iconName: 'cloud',
-        music: music1
+        music: music1,
+        sound: {},
         },
       
         {name: 'Snow',
         iconName: 'weather-rainy',
         music: music2,
+        sound: {},
         },
       
         {name: 'Puddle',
         iconName: 'airplane',
         music: music1,
+        sound: {},
         },
       
         {name: 'Lake',
         iconName: 'cloud',
         music: music2,
+        sound: {},
       },
       ]]
   },
@@ -145,12 +151,15 @@ function SoundsScreen() {
   const [currentAudios, setCurrentAudios] = useState([{}]);
 
   const [selectedName, setSelectedName] = useState([]);
+  const [firstClick, setFirstClick] = useState(true);
 
   // soundcard들을 렌더링하는 function
   const renderItem = ({ item }) => {
     // selectedName 안에 item.name이 있나 없나 확인하고 background랑 color 색상 토글하기
     const backgroundColor = selectedName.includes(item.name)  ? "lightgray" : "#fff";
     const color = selectedName.includes(item.name) ? 'white' : 'black';
+    // const sound = item.sound
+    
 
     const handleSoundCardPress = (itemName, itemMusic) => {
 
@@ -158,7 +167,7 @@ function SoundsScreen() {
       ? setSelectedName(selectedName.filter((item) => itemName !== item))
       : setSelectedName(prevArray => [...prevArray, itemName]);
 
-      handleAudioPlayPause(itemMusic);
+      handleAudioPlayPause(itemName, itemMusic);
     };
 
     return(
@@ -205,91 +214,55 @@ useEffect(()=>{
 },[])
 
 
-
-
-
 //tutorial: https://www.youtube.com/watch?v=NBTj23qe7BA
-const handleAudioPlayPause = async (audio) => {
+const handleAudioPlayPause = async (item_name, audio) => {
 
-  //playing audio for the first time.
-  // if(soundObj === []) {
-    const playbackObj = new Audio.Sound();
+  ///////////////////////11월 19일 /////////////////
+  // console.log(this.playing)
 
-    const status = await playbackObj.loadAsync(
-      audio,
-      { shouldPlay: true }
+  if (selectedName.includes(item_name)) {
+    this.sound.unloadAsync();
+    this.playing = false;
+
+  }
+  else {
+    const { sound } = await Audio.Sound.createAsync(
+      audio
     );
+    //카드 이름에 sound object를 넣어준다
+    this.sound = sound
+    this.playing = true;
+  
+        // console.log(sound)
 
+    // console.log(audio)
+  
+    await this.sound.playAsync();
+    }
+  //playing audio for the first time.
+    // const playbackObj = new Audio.Sound();
 
+    // const status = await playbackObj.loadAsync(
+    //   audio,
+    //   { shouldPlay: true }
+    // );
 
-    // currentAudios.includes(audio)
-    //   ? setCurrentAudios(currentAudios.filter((item) => audio !== item))
-    //   : setCurrentAudios(prevArray => [...prevArray, audio]);
+    // playbackObjs.includes(playbackObj)
+    //   // ? setPlaybackObjs(playbackObjs.filter((item) => playbackObj !== item))
+    //   ? unloadPlaybackObj(playbackObj)
+    //   : setPlaybackObjs(prevArray => [...prevArray, playbackObj]);
 
-    playbackObjs.includes(playbackObj)
-      // ? setPlaybackObjs(playbackObjs.filter((item) => playbackObj !== item))
-      ? unloadPlaybackObj(playbackObj)
-      : setPlaybackObjs(prevArray => [...prevArray, playbackObj]);
-
-    console.log(status.uri)
-
-    // const unloadPlaybackObj = async (playbackObj) => {
-    //   setPlaybackObjs(playbackObjs.filter((item) => playbackObj !== item))
-    //   await playbackObj.unloadAsync()
-    // }
-
-
-
-///////////////////////11월 19일 /////////////////
-
-
-
-
-
-
+    // console.log(status.uri)
 
 
 
 
-
+//////////////////////////
 
 
 
 
 
-
-
-
-
-
-
-
-    // soundObjs.includes(status)
-    //   ? setSoundObjs(soundObjs.filter((item) => status !== item))
-    //   : setSoundObjs(prevArray => [...prevArray, status]);
-
-    
-
-
-    // setCurrentAudio(prevArray => [...prevArray, audio]);
-    // setPlaybackObj(prevArray => [...prevArray, playbackObj]);
-    // setSoundObj(prevArray => [...prevArray, status]);
-    // return
-  // };
-
-  //pause audio
-  // if(soundObjs.isLoaded && soundObjs.isPlaying) {
-  //   const status = await playbackObj.setStatusAsync({ shouldPlay: false });
-    // return setSoundObj(status);
-  // }
-
-  // //resume audio
-  // if(soundObj.isLoaded &&
-  //    !soundObj.isPlaying &&
-  //    currentAudio === audio ) {
-  //      const status = await playbackObj.playAsync();
-  //      return setSoundObj(status);
-  //    }  
 
 
 
