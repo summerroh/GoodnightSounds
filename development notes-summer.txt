@@ -1,29 +1,9 @@
-SoundScreen.js
-238
-오디오 멀티플 재생은 되는데 그걸 언로드할방법을 찾아야함
-
-    currentAudios.includes(audio)
-      ? setCurrentAudios(currentAudios.filter((item) => audio !== item))
-      : setCurrentAudios(prevArray => [...prevArray, audio]);
-
-이 로직들에서 ? 앞에부분에 언로드도 포함해야함?
-
-
-
-handleAudioPlayPause에 name 하고 audio를 보내서
-
-name으로 된 audio object를 만들고 그거를 load unload 토글하면 되는 거 아님?
-
-지금 soundccard를 클릭하면 this.sound에 sound object가 들어가서 프린팅되게 되는데, 이게 각자 유니크한 sound object인지 봐야함, 고유 id넘버같은게 있나 보고 비교해보기
--> sound.어쩌구 해서 오디오 제목 값같은걸 프린트해서 볼 수 있을 것 같긴 한데, 오디오가 다르게 잘 나오는걸 보면 다른 오브젝트가 맞을수도?
-
-230번째줄에
-if (this.sound) {
-  this.sound.unloadAsync();
-}
-이 로직을 잘 짜야할듯?
 
 맨처음클릭했을때 createAsync를 하고 그 다음부턴 클릭때마다 unload,    load/playAsync를 반복행할것같은데..
 
 sound 하나를 만들고 거기에 계속 다른 audio를 load하려 했더니, Unhandled promise rejection: Error: The Sound is already loaded.가 뜸.
 버튼 하나마다 유니크한 const sound = new Audio.Sound();를 생성해주어야 할 듯?
+
+sound component를 만들었는데 UseEffect에 Audio.setAudioModeAsync이 실행될때마다
+사운드카드 하나당 possible unhandled promise rejection이 뜨고 --> setAudioModeAsync Async라서그런가?
+사운드카드 클릭할때마다 possible unhandled promise rejection이 뜹니당 --> 이것도 handleAudioPlayPause 이 평션이 async라서그런가?
