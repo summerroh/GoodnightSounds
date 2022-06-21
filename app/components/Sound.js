@@ -6,6 +6,13 @@ import { Audio } from "expo-av";
 
 function Sound({ itemName, itemMusic, iconName }) {
   let soundObj = undefined;
+  let backgroundColor = "#fff";
+  // const [backgroundColor, setBackgroundColor] = useState("#fff");
+  // const [color, setColor] = useState(null);
+  // if (soundObj === !undefined) {
+  //   backgroundColor = soundObj._loaded ? "lightgray" : "#fff";
+  //   console.log(backgroundColor);
+  // }
 
   useEffect(() => {
     Audio.setAudioModeAsync({
@@ -23,10 +30,14 @@ function Sound({ itemName, itemMusic, iconName }) {
     if (soundObj === undefined) {
       soundObj = new Audio.Sound();
       let status = await soundObj.loadAsync(audio, { shouldPlay: true });
+      // backgroundColor = "lightgray";
     } else if (!soundObj._loaded) {
+      // setBackgroundColor("lightgray");
       let status = await soundObj.loadAsync(audio, { shouldPlay: true });
+      // backgroundColor = "lightgray";
     } else if (soundObj._loaded) {
       soundObj.unloadAsync();
+      // setBackgroundColor("#fff");
     }
   };
 
@@ -34,8 +45,8 @@ function Sound({ itemName, itemMusic, iconName }) {
     <View>
       <TouchableOpacity
         onPress={() => handleAudioPlayPause(itemMusic).catch(console.error)}
-        // style={[styles.soundCard, { backgroundColor }]}
-        style={[styles.soundCard]}
+        style={[styles.soundCard, { backgroundColor }]}
+        // style={[styles.soundCard]}
       >
         <MaterialCommunityIcons name={iconName} size={20} color={"black"} />
         {/* <Text style={[{ color }]}>{item.name}</Text> */}

@@ -1,9 +1,2 @@
-
-맨처음클릭했을때 createAsync를 하고 그 다음부턴 클릭때마다 unload,    load/playAsync를 반복행할것같은데..
-
-sound 하나를 만들고 거기에 계속 다른 audio를 load하려 했더니, Unhandled promise rejection: Error: The Sound is already loaded.가 뜸.
-버튼 하나마다 유니크한 const sound = new Audio.Sound();를 생성해주어야 할 듯?
-
-sound component를 만들었는데 UseEffect에 Audio.setAudioModeAsync이 실행될때마다
-사운드카드 하나당 possible unhandled promise rejection이 뜨고 --> setAudioModeAsync Async라서그런가?
-사운드카드 클릭할때마다 possible unhandled promise rejection이 뜹니당 --> 이것도 handleAudioPlayPause 이 평션이 async라서그런가?
+볼륨조절 컨트롤러 sound component 내에 만들기
+sound component 내에서 backgroundColor랑 color 변하게하기 생각보다 왜 어렵냐 이거...?

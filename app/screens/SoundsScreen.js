@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -10,116 +10,13 @@ import {
 
 import Screen from "../components/Screen";
 import Sound from "../components/Sound";
-
-const music1 = require("../../assets/nujabes1.mp3");
-const music2 = require("../../assets/nujabes2.mp3");
-
-const sounds = [
-  {
-    title: "Rainy Sounds",
-    data: [
-      [
-        { name: "Rain", iconName: "weather-rainy", music: music1, sound: {} },
-
-        { name: "Bird", iconName: "airplane", music: music2, sound: {} },
-
-        { name: "Thunder", iconName: "cloud", music: music1, sound: {} },
-
-        { name: "Snow", iconName: "weather-rainy", music: music2, sound: {} },
-
-        { name: "Puddle", iconName: "airplane", music: music1, sound: {} },
-
-        { name: "Lake", iconName: "cloud", music: music2, sound: {} },
-      ],
-    ],
-  },
-  {
-    title: "Train Sounds",
-    data: [
-      [
-        { name: "Train", iconName: "weather-rainy", music: music1 },
-
-        { name: "Subway", iconName: "airplane", music: music2 },
-
-        { name: "Car", iconName: "cloud", music: music1 },
-
-        { name: "Airplane", iconName: "weather-rainy", music: music2 },
-
-        { name: "City", iconName: "airplane" },
-
-        { name: "Wiper", iconName: "cloud" },
-
-        { name: "Fan", iconName: "weather-rainy" },
-
-        { name: "Dryer", iconName: "airplane" },
-      ],
-    ],
-  },
-  {
-    title: "Train Sounds",
-    data: [
-      [
-        { name: "Frog", iconName: "weather-rainy" },
-
-        { name: "Frog2", iconName: "airplane" },
-
-        { name: "Cricket", iconName: "cloud" },
-
-        { name: "Wolf", iconName: "weather-rainy" },
-
-        { name: "Cat Purring", iconName: "airplane" },
-
-        { name: "Dog", iconName: "cloud" },
-
-        { name: "Loon", iconName: "weather-rainy" },
-
-        { name: "Bell", iconName: "airplane" },
-      ],
-    ],
-  },
-  {
-    title: "Mellodies",
-    data: [
-      [
-        { name: "Chime", iconName: "weather-rainy" },
-
-        { name: "Cafe", iconName: "airplane" },
-
-        { name: "Crowd", iconName: "cloud" },
-
-        { name: "Lullaby", iconName: "weather-rainy" },
-
-        { name: "Song1", iconName: "airplane" },
-
-        { name: "Song2", iconName: "cloud" },
-
-        { name: "Rest", iconName: "weather-rainy" },
-
-        { name: "Harp", iconName: "airplane" },
-      ],
-    ],
-  },
-];
+import { sounds } from "../data/Data";
 
 function SoundsScreen() {
   const [selectedName, setSelectedName] = useState([]);
-  const [firstClick, setFirstClick] = useState(true);
 
   // soundcard들을 렌더링하는 function
   const renderItem = ({ item }) => {
-    // selectedName 안에 item.name이 있나 없나 확인하고 background랑 color 색상 토글하기
-    // const backgroundColor = selectedName.includes(item.name)  ? "lightgray" : "#fff";
-    // const color = selectedName.includes(item.name) ? 'white' : 'black';
-    // // const sound = item.sound
-
-    // const handleSoundCardPress = (itemName, itemMusic) => {
-
-    //   selectedName.includes(item.name)
-    //   ? setSelectedName(selectedName.filter((item) => itemName !== item))
-    //   : setSelectedName(prevArray => [...prevArray, itemName]);
-
-    //   handleAudioPlayPause(itemName, itemMusic);
-    // };
     return (
       <Sound
         itemName={item.name}
