@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  StyleSheet,
-  FlatList,
-  Text,
-  SectionList,
-  Button,
-} from "react-native";
+import { View, StyleSheet, FlatList, Text, SectionList } from "react-native";
 
 import Screen from "../components/Screen";
 import Sound from "../components/Sound";
@@ -44,11 +37,6 @@ function SoundsScreen() {
   return (
     <Screen style={styles.screen}>
       <View style={styles.container}>
-        <Button
-          onPress={() => console.log("can i console log")}
-          title="test sound!"
-        ></Button>
-
         <SectionList
           ListHeaderComponent={<Text style={styles.screenHeader}>Sounds</Text>}
           contentContainerStyle={{

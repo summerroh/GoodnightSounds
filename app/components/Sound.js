@@ -1,18 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Button } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Text, TouchableOpacity } from "react-native";
 import { Audio } from "expo-av";
 
 function Sound({ itemName, itemMusic, iconName }) {
-  let soundObj = undefined;
-  let backgroundColor = "#fff";
-  // const [backgroundColor, setBackgroundColor] = useState("#fff");
-  // const [color, setColor] = useState(null);
-  // if (soundObj === !undefined) {
-  //   backgroundColor = soundObj._loaded ? "lightgray" : "#fff";
-  //   console.log(backgroundColor);
-  // }
+  let soundObj = new Audio.Sound();
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     Audio.setAudioModeAsync({
@@ -24,29 +18,34 @@ function Sound({ itemName, itemMusic, iconName }) {
       staysActiveInBackground: true,
       playThroughEarpieceAndroid: false,
     }).catch(console.error);
+    // initializeAudio(itemMusic);
   }, []);
 
+  const handlePress = (audio) => {
+    // setIsPlaying(!isPlaying);
+    handleAudioPlayPause(audio).catch(console.error);
+  };
+
   const handleAudioPlayPause = async (audio) => {
-    if (soundObj === undefined) {
-      soundObj = new Audio.Sound();
-      let status = await soundObj.loadAsync(audio, { shouldPlay: true });
-      // backgroundColor = "lightgray";
-    } else if (!soundObj._loaded) {
-      // setBackgroundColor("lightgray");
-      let status = await soundObj.loadAsync(audio, { shouldPlay: true });
-      // backgroundColor = "lightgray";
+    if (!soundObj._loaded) {
+      soundObj.loadAsync(audio, { shouldPlay: true });
     } else if (soundObj._loaded) {
       soundObj.unloadAsync();
-      // setBackgroundColor("#fff");
     }
+  };
+
+  const volumeControl = async () => {
+    // value: 0.0 ~ 1.0
+    soundObj.setVolumeAsync(1).catch(console.error);
   };
 
   return (
     <View>
+      <Button title="volume" onPress={() => volumeControl()}></Button>
       <TouchableOpacity
-        onPress={() => handleAudioPlayPause(itemMusic).catch(console.error)}
-        style={[styles.soundCard, { backgroundColor }]}
-        // style={[styles.soundCard]}
+        onPress={() => handlePress(itemMusic)}
+        // style={[styles.soundCard, { backgroundColor }]}
+        style={[styles.soundCard]}
       >
         <MaterialCommunityIcons name={iconName} size={20} color={"black"} />
         {/* <Text style={[{ color }]}>{item.name}</Text> */}
