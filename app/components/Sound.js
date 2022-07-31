@@ -3,6 +3,7 @@ import { View, StyleSheet, Button } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Text, TouchableOpacity } from "react-native";
 import { Audio } from "expo-av";
+import { Slider } from "@miblanchard/react-native-slider";
 
 function Sound({ itemName, itemMusic, iconName }) {
   const [soundObj, setSoundObj] = useState(new Audio.Sound());
@@ -23,20 +24,22 @@ function Sound({ itemName, itemMusic, iconName }) {
   const handlePress = async (audio) => {
     setIsPlaying(!isPlaying);
     if (!isPlaying) {
-      soundObj.loadAsync(audio, { shouldPlay: true });
+      await soundObj.loadAsync(audio, { shouldPlay: true });
+      await soundObj.setVolumeAsync(0.5);
     } else {
       await soundObj.unloadAsync();
     }
   };
 
-  const volumeControl = async () => {
+  const volumeControl = async (value) => {
     // value: 0.0 ~ 1.0
-    soundObj.setVolumeAsync(1).catch(console.error);
+    if (soundObj._loaded) {
+      await soundObj.setVolumeAsync(value).catch(console.error);
+    }
   };
 
   return (
     <View>
-      <Button title="volume" onPress={() => volumeControl()}></Button>
       <TouchableOpacity
         onPress={() => handlePress(itemMusic)}
         style={[
@@ -53,6 +56,23 @@ function Sound({ itemName, itemMusic, iconName }) {
           {itemName}
         </Text>
       </TouchableOpacity>
+      {isPlaying && (
+        <Slider
+          containerStyle={{
+            width: 70,
+            height: 30,
+          }}
+          minimumValue={0.0}
+          maximumValue={1.0}
+          step={0.1}
+          value={0.5}
+          onValueChange={(value) => volumeControl(value[0])}
+          thumbStyle={{ height: 14, width: 14 }}
+          thumbTintColor="#577399"
+          minimumTrackTintColor="#FFFFFF"
+          maximumTrackTintColor="#dedede"
+        />
+      )}
     </View>
   );
 }

@@ -1,4 +1,1 @@
-볼륨조절 컨트롤러 sound component 내에 만들기
-
-음악이 플레이중일 때는: 
-1. 음악 아이콘 밑에 각자 볼륨 컨트롤러가 나와야 한다
+npm remove @react-native-community/slider 해주기
