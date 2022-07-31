@@ -1,6 +1,4 @@
 볼륨조절 컨트롤러 sound component 내에 만들기
-sound component 내에서 backgroundColor랑 color 변하게하기 생각보다 왜 어렵냐 이거...?
 
 음악이 플레이중일 때는: 
-1. 음악 아이콘 밑에 각자 볼륨 컨트롤러가 나와야 하고
-2. backgroundColor 랑 color 가 변해야 한다
+1. 음악 아이콘 밑에 각자 볼륨 컨트롤러가 나와야 한다

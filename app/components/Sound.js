@@ -5,7 +5,7 @@ import { Text, TouchableOpacity } from "react-native";
 import { Audio } from "expo-av";
 
 function Sound({ itemName, itemMusic, iconName }) {
-  let soundObj = new Audio.Sound();
+  const [soundObj, setSoundObj] = useState(new Audio.Sound());
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
@@ -18,19 +18,14 @@ function Sound({ itemName, itemMusic, iconName }) {
       staysActiveInBackground: true,
       playThroughEarpieceAndroid: false,
     }).catch(console.error);
-    // initializeAudio(itemMusic);
   }, []);
 
-  const handlePress = (audio) => {
-    // setIsPlaying(!isPlaying);
-    handleAudioPlayPause(audio).catch(console.error);
-  };
-
-  const handleAudioPlayPause = async (audio) => {
-    if (!soundObj._loaded) {
+  const handlePress = async (audio) => {
+    setIsPlaying(!isPlaying);
+    if (!isPlaying) {
       soundObj.loadAsync(audio, { shouldPlay: true });
-    } else if (soundObj._loaded) {
-      soundObj.unloadAsync();
+    } else {
+      await soundObj.unloadAsync();
     }
   };
 
@@ -44,12 +39,19 @@ function Sound({ itemName, itemMusic, iconName }) {
       <Button title="volume" onPress={() => volumeControl()}></Button>
       <TouchableOpacity
         onPress={() => handlePress(itemMusic)}
-        // style={[styles.soundCard, { backgroundColor }]}
-        style={[styles.soundCard]}
+        style={[
+          styles.soundCard,
+          { backgroundColor: isPlaying ? "#bebebe" : "#fff" },
+        ]}
       >
-        <MaterialCommunityIcons name={iconName} size={20} color={"black"} />
-        {/* <Text style={[{ color }]}>{item.name}</Text> */}
-        <Text style={styles.text}>{itemName}</Text>
+        <MaterialCommunityIcons
+          name={iconName}
+          size={20}
+          color={isPlaying ? "#fff" : "#000"}
+        />
+        <Text style={[styles.text, { color: isPlaying ? "#fff" : "#000" }]}>
+          {itemName}
+        </Text>
       </TouchableOpacity>
     </View>
   );
