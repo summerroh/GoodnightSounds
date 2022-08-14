@@ -1,12 +1,29 @@
 import React, { useState } from "react";
-import { View, StyleSheet, FlatList, Text, SectionList } from "react-native";
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  Text,
+  SectionList,
+  TouchableOpacity,
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Screen from "../components/Screen";
 import Sound from "../components/Sound";
 import { sounds } from "../data/Data";
 
 function SoundsScreen() {
-  const [selectedName, setSelectedName] = useState([]);
+  const [selectedItem, setSelectedItem] = useState([]);
+
+  const storeData = async (value) => {
+    // try {
+    //   await AsyncStorage.setItem("user", JSON.stringify(value));
+    // } catch (e) {
+    //   // saving error
+    // }
+    console.log(selectedItem);
+  };
 
   // soundcard들을 렌더링하는 function
   const renderItem = ({ item }) => {
@@ -15,6 +32,8 @@ function SoundsScreen() {
         itemName={item.name}
         itemMusic={item.music}
         iconName={item.iconName}
+        initialPlay={false}
+        setSelectedItem={setSelectedItem}
       />
     );
   };
@@ -28,7 +47,6 @@ function SoundsScreen() {
         showsHorizontalScrollIndicator={false}
         data={item}
         keyExtractor={(Item) => Item.name}
-        extraData={selectedName}
         renderItem={renderItem}
       ></FlatList>
     );
@@ -38,7 +56,12 @@ function SoundsScreen() {
     <Screen style={styles.screen}>
       <View style={styles.container}>
         <SectionList
-          ListHeaderComponent={<Text style={styles.screenHeader}>Sounds</Text>}
+          ListHeaderComponent={
+            <View style={styles.listHeadContainer}>
+              <Text style={styles.screenHeader}>Goodnight, {"\n"}Summer</Text>
+              <Text style={styles.screenHeader}>saved</Text>
+            </View>
+          }
           contentContainerStyle={{
             paddingBottom: 30,
             paddingTop: 20,
@@ -54,6 +77,17 @@ function SoundsScreen() {
             <Text style={styles.soundCardHeader}>{title}</Text>
           )}
         />
+        <TouchableOpacity
+          style={{
+            width: 40,
+            height: 40,
+            backgroundColor: "#000",
+            position: "absolute",
+            right: 20,
+            bottom: 20,
+          }}
+          onPress={() => storeData()}
+        ></TouchableOpacity>
       </View>
     </Screen>
   );
@@ -67,6 +101,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#00003f",
     // justifyContent: 'center',
+  },
+  listHeadContainer: {
+    flexDirection: "row",
   },
   row: {
     // flex: 1,

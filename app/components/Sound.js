@@ -5,11 +5,22 @@ import { Text, TouchableOpacity } from "react-native";
 import { Audio } from "expo-av";
 import { Slider } from "@miblanchard/react-native-slider";
 
-function Sound({ itemName, itemMusic, iconName }) {
+function Sound({
+  itemName,
+  itemMusic,
+  iconName,
+  initialPlay,
+  setSelectedItem,
+}) {
   const [soundObj, setSoundObj] = useState(new Audio.Sound());
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
+    if (initialPlay) {
+      setSelectedItem((prev) => [...prev, itemName]);
+      handlePress(itemMusic);
+    }
+
     Audio.setAudioModeAsync({
       // allowsRecordingIOS: false,
       // interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
@@ -23,6 +34,7 @@ function Sound({ itemName, itemMusic, iconName }) {
 
   const handlePress = async (audio) => {
     setIsPlaying(!isPlaying);
+    // setSelectedItem()
     if (!isPlaying) {
       await soundObj.loadAsync(audio, { shouldPlay: true });
       await soundObj.setVolumeAsync(0.5);

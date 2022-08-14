@@ -1,1 +1,4 @@
 npm remove @react-native-community/slider 해주기
+
+무료 ASMR 사운드 구해보기
+프리셋저장기능하고 화면 구현중
