@@ -14,12 +14,13 @@ function Sound({
 }) {
   const [soundObj, setSoundObj] = useState(new Audio.Sound());
   const [isPlaying, setIsPlaying] = useState(false);
+  const [volume, setVolume] = useState(0.5);
 
   useEffect(() => {
-    if (initialPlay) {
-      setSelectedItem((prev) => [...prev, itemName]);
-      handlePress(itemMusic);
-    }
+    // if (initialPlay) {
+    //   setSelectedItem((prev) => [...prev, itemName]);
+    //   handlePress(itemMusic);
+    // }
 
     Audio.setAudioModeAsync({
       // allowsRecordingIOS: false,
@@ -34,7 +35,17 @@ function Sound({
 
   const handlePress = async (audio) => {
     setIsPlaying(!isPlaying);
-    // setSelectedItem()
+    if (isPlaying) {
+      setSelectedItem((prev) =>
+        prev.filter((item) => item.itemName !== itemName)
+      );
+    } else {
+      setSelectedItem((prev) => [
+        ...prev,
+        { itemName: itemName, volume: volume },
+      ]);
+    }
+
     if (!isPlaying) {
       await soundObj.loadAsync(audio, { shouldPlay: true });
       await soundObj.setVolumeAsync(0.5);
@@ -45,6 +56,8 @@ function Sound({
 
   const volumeControl = async (value) => {
     // value: 0.0 ~ 1.0
+    setVolume(value);
+    console.log(volume);
     if (soundObj._loaded) {
       await soundObj.setVolumeAsync(value).catch(console.error);
     }

@@ -17,12 +17,21 @@ function SoundsScreen() {
   const [selectedItem, setSelectedItem] = useState([]);
 
   const storeData = async (value) => {
-    // try {
-    //   await AsyncStorage.setItem("user", JSON.stringify(value));
-    // } catch (e) {
-    //   // saving error
-    // }
+    try {
+      await AsyncStorage.setItem("user", JSON.stringify(value));
+    } catch (e) {
+      // saving error
+    }
     console.log(selectedItem);
+  };
+
+  const getData = async () => {
+    try {
+      const userData = JSON.parse(await AsyncStorage.getItem("user"));
+      console.log("get data: ", userData);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // soundcard들을 렌더링하는 function
@@ -86,7 +95,18 @@ function SoundsScreen() {
             right: 20,
             bottom: 20,
           }}
-          onPress={() => storeData()}
+          onPress={() => storeData([selectedItem])}
+        ></TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            width: 40,
+            height: 40,
+            backgroundColor: "red",
+            position: "absolute",
+            right: 100,
+            bottom: 20,
+          }}
+          onPress={() => getData()}
         ></TouchableOpacity>
       </View>
     </Screen>
