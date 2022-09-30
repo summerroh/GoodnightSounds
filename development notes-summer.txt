@@ -10,9 +10,12 @@ asyncStorage사용해서 저장기능 된다.
 -> 궂이 파일에 저장안해도될듯??
 
 itemName은 저장됐는데 itemName을 사용해서 프리셋을 클릭하면 그 소리들이 플레이되게해야함
-> 작업중
 
 save버튼을 누르면 SoundScreen의 storeData()가 실행되어서 setSaveClicked + 1되고,
 그러면 Sound.js에서 setSelectedItem()이 실행되어 
 SoundScreen의 selectedItem 값이 업데이트됨. 
 그러면 SoundScreen의 useEffect가 발동되어 AsyncStorage에 값이 저장됨
+
+프리셋 저장 버튼은 그대로 남고,
+프리셋 불러오기 버튼은 presetScreen으로 가서 각자 버튼에 배정되고,
+데이터 리셋 버튼은 presetScreen으로 가서 삭제 버튼으로 변경하여 사용해야할듯
