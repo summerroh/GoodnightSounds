@@ -7,5 +7,12 @@ asyncStorage사용해서 저장기능 된다.
 어떤 것들을 (itemName, volume)
 어디에 -> Preset.js
 저장해야하지?
+-> 궂이 파일에 저장안해도될듯??
 
 itemName은 저장됐는데 itemName을 사용해서 프리셋을 클릭하면 그 소리들이 플레이되게해야함
+> 작업중
+
+save버튼을 누르면 SoundScreen의 storeData()가 실행되어서 setSaveClicked + 1되고,
+그러면 Sound.js에서 setSelectedItem()이 실행되어 
+SoundScreen의 selectedItem 값이 업데이트됨. 
+그러면 SoundScreen의 useEffect가 발동되어 AsyncStorage에 값이 저장됨

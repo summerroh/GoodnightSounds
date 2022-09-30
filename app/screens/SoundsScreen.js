@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -6,6 +6,7 @@ import {
   Text,
   SectionList,
   TouchableOpacity,
+  Button,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -13,22 +14,51 @@ import Screen from "../components/Screen";
 import Sound from "../components/Sound";
 import { sounds } from "../data/Data";
 
-function SoundsScreen() {
+function SoundsScreen({ navigation }) {
   const [selectedItem, setSelectedItem] = useState([]);
+  const [saveClicked, setSaveClicked] = useState(0);
+  const [preset, setPreset] = useState([]);
+  // selectedItem이 dependency로 들어간 useEffect가 첫 렌더시에 실행되지 않게 해줌
+  const firstRender = useRef(true);
+
+  useEffect(() => {
+    // console.log(firstRender);
+    if (firstRender.current === false) {
+      storeData(selectedItem);
+    }
+    firstRender.current = false;
+  }, [selectedItem]);
 
   const storeData = async (value) => {
     try {
-      await AsyncStorage.setItem("user", JSON.stringify(value));
+      // AsyncStorage의 모든 키 가져오기
+      let keys = await AsyncStorage.getAllKeys();
+      console.log(keys);
+      // AsyncStorage에 값 저장하기
+      console.log(keys.length);
+      await AsyncStorage.setItem(
+        `preset${keys.length + 1}`,
+        JSON.stringify(value)
+      );
+    } catch (e) {}
+  };
+  const resetData = async () => {
+    try {
+      await AsyncStorage.setItem("preset1", JSON.stringify([]));
     } catch (e) {
       // saving error
     }
-    console.log(selectedItem);
+
+    setSaveClicked(saveClicked + 1);
+    // console.log(selectedItem);
   };
 
+  // get and play the preset
   const getData = async () => {
     try {
-      const userData = JSON.parse(await AsyncStorage.getItem("user"));
-      console.log("get data: ", userData);
+      const presetData = JSON.parse(await AsyncStorage.getItem("preset16  "));
+      setPreset(presetData);
+      console.log("get data: ", presetData);
     } catch (error) {
       console.log(error);
     }
@@ -43,6 +73,8 @@ function SoundsScreen() {
         iconName={item.iconName}
         initialPlay={false}
         setSelectedItem={setSelectedItem}
+        saveClicked={saveClicked}
+        preset={preset}
       />
     );
   };
@@ -68,7 +100,12 @@ function SoundsScreen() {
           ListHeaderComponent={
             <View style={styles.listHeadContainer}>
               <Text style={styles.screenHeader}>Goodnight, {"\n"}Summer</Text>
-              <Text style={styles.screenHeader}>saved</Text>
+              <Text
+                style={styles.screenHeader}
+                onPress={() => navigation.navigate("presetScreen")}
+              >
+                saved
+              </Text>
             </View>
           }
           contentContainerStyle={{
@@ -95,7 +132,18 @@ function SoundsScreen() {
             right: 20,
             bottom: 20,
           }}
-          onPress={() => storeData([selectedItem])}
+          onPress={() => setSaveClicked(saveClicked + 1)}
+        ></TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            width: 40,
+            height: 40,
+            backgroundColor: "green",
+            position: "absolute",
+            left: 20,
+            bottom: 20,
+          }}
+          onPress={() => resetData()}
         ></TouchableOpacity>
         <TouchableOpacity
           style={{

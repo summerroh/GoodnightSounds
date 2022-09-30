@@ -18,4 +18,4 @@ const preset2 = [
 ];
 
 // 이거 export everything 으로 바꿔야함
-export { presets };
+export { preset1 };
