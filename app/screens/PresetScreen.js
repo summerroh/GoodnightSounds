@@ -18,17 +18,32 @@ function PresetScreen(props) {
     getData();
   }, []);
 
-  // AsyncStorage의 모든 아이템을 가져오기(작업중)
+  // AsyncStorage의 모든 아이템을 가져오기
   const getData = async () => {
     try {
       // AsyncStorage의 모든 키 가져오기
       let keys = await AsyncStorage.getAllKeys();
       console.log(keys);
       setKeys(keys);
-      // keys.forEach((key) => console.log(key));
-      // const presetsData = JSON.parse(await AsyncStorage.getItem("preset16  "));
-      // setPresets(presetsData);
-      // console.log("get data: ", presetsData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // 프리셋 삭제 기능
+  const deletePreset = async (item) => {
+    try {
+      await AsyncStorage.removeItem(item);
+      let keys = await AsyncStorage.getAllKeys();
+      setKeys(keys);
+    } catch (e) {}
+  };
+
+  // 프리셋 클릭시 - 음악 플레이되게 하는 기능
+  const handlePress = async (item) => {
+    try {
+      const presetsData = JSON.parse(await AsyncStorage.getItem(item));
+      console.log("presetdata: ", presetsData);
     } catch (error) {
       console.log(error);
     }
@@ -39,7 +54,7 @@ function PresetScreen(props) {
     return (
       <View>
         <TouchableOpacity
-          // onPress={() => handlePress(itemMusic)}
+          onPress={() => handlePress(item)}
           style={[
             styles.soundCard,
             // { backgroundColor: isPlaying ? "#bebebe" : "#fff" },
@@ -52,9 +67,20 @@ function PresetScreen(props) {
             // color={isPlaying ? "#fff" : "#000"}
             color={  "#000"}
           /> */}
+          <TouchableOpacity
+            style={{
+              width: 40,
+              height: 40,
+              backgroundColor: "green",
+              position: "absolute",
+              left: 20,
+              bottom: 20,
+            }}
+            onPress={() => deletePreset(item)}
+          ></TouchableOpacity>
           <Text style={[styles.text, { color: "#000" }]}>
-            preset
-            {/* {itemName} */}
+            {/* preset */}
+            {item}
           </Text>
         </TouchableOpacity>
       </View>
@@ -66,7 +92,7 @@ function PresetScreen(props) {
       <View style={styles.container}>
         <Text style={styles.screenHeader}>Saved Presets</Text>
         <FlatList
-          numColumns={4}
+          numColumns={2}
           columnWrapperStyle={styles.row}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
@@ -104,7 +130,7 @@ const styles = StyleSheet.create({
   },
   soundCard: {
     backgroundColor: "#fff",
-    width: 70,
+    width: 150,
     height: 70,
     borderRadius: 10,
     alignItems: "center",

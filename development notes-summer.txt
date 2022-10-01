@@ -17,5 +17,9 @@ SoundScreen의 selectedItem 값이 업데이트됨.
 그러면 SoundScreen의 useEffect가 발동되어 AsyncStorage에 값이 저장됨
 
 프리셋 저장 버튼은 그대로 남고,
-프리셋 불러오기 버튼은 presetScreen으로 가서 각자 버튼에 배정되고,
-데이터 리셋 버튼은 presetScreen으로 가서 삭제 버튼으로 변경하여 사용해야할듯
+프리셋 불러오기 (음악플레이) 버튼은 presetScreen으로 가서 각자 버튼에 배정되고,
+데이터 리셋 버튼은 presetScreen으로 가서 삭제 버튼으로 변경하여 사용해야할듯 (done)
+
+오디오 loop설정해놔야할듯
+
+preset 이름을 uuid를 쓰던 날짜를 쓰던 해야할듯? 날짜를 쓰면 최신순으로 정렬할수 있으니 날짜가 나을듯
