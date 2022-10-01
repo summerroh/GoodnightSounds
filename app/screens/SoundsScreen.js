@@ -53,17 +53,6 @@ function SoundsScreen({ navigation }) {
     // console.log(selectedItem);
   };
 
-  // get and play the preset
-  const getData = async () => {
-    try {
-      const presetData = JSON.parse(await AsyncStorage.getItem("preset16  "));
-      setPreset(presetData);
-      console.log("get data: ", presetData);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   // soundcard들을 렌더링하는 function
   const renderItem = ({ item }) => {
     return (
@@ -144,17 +133,6 @@ function SoundsScreen({ navigation }) {
             bottom: 20,
           }}
           onPress={() => resetData()}
-        ></TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            width: 40,
-            height: 40,
-            backgroundColor: "red",
-            position: "absolute",
-            right: 100,
-            bottom: 20,
-          }}
-          onPress={() => getData()}
         ></TouchableOpacity>
       </View>
     </Screen>
