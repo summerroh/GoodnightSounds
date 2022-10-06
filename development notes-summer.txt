@@ -1,10 +1,12 @@
-무료 ASMR 사운드 구해보기
-프리셋저장기능하고 화면 구현중
-
+*************** preset 저장되는 로직 설명 *****************
 save버튼을 누르면 SoundScreen의 storeData()가 실행되어서 setSaveClicked + 1되고,
 그러면 Sound.js에서 setSelectedItem()이 실행되어 
 SoundScreen의 selectedItem 값이 업데이트됨. 
 그러면 SoundScreen의 useEffect가 발동되어 AsyncStorage에 값이 저장됨
+*************************************************************
+
+무료 ASMR 사운드 구해보기
+프리셋저장기능하고 화면 구현중
 
 프리셋 저장 버튼은 그대로 남고,
 프리셋 불러오기 (음악플레이) 버튼은 presetScreen으로 가서 각자 버튼에 배정되고,

@@ -30,6 +30,8 @@ function SoundsScreen({ navigation }) {
   }, [selectedItem]);
 
   const storeData = async (value) => {
+    let date = JSON.stringify(new Date());
+
     try {
       // AsyncStorage의 모든 키 가져오기
       let keys = await AsyncStorage.getAllKeys();
@@ -37,14 +39,15 @@ function SoundsScreen({ navigation }) {
       // AsyncStorage에 값 저장하기
       console.log(keys.length);
       await AsyncStorage.setItem(
-        `preset${keys.length + 1}`,
+        // `preset${keys.length + 1}`,
+        date,
         JSON.stringify(value)
       );
     } catch (e) {}
   };
   const resetData = async () => {
     try {
-      await AsyncStorage.setItem("preset1", JSON.stringify([]));
+      await AsyncStorage.clear();
     } catch (e) {
       // saving error
     }
