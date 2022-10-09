@@ -10,16 +10,29 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import { Entypo } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
+
 import Screen from "../components/Screen";
 import Sound from "../components/Sound";
 import { sounds } from "../data/Data";
 
-function SoundsScreen({ navigation }) {
+function SoundsScreen({ navigation, route }) {
   const [selectedItem, setSelectedItem] = useState([]);
   const [saveClicked, setSaveClicked] = useState(0);
   const [preset, setPreset] = useState([]);
   // selectedItem이 dependency로 들어간 useEffect가 첫 렌더시에 실행되지 않게 해줌
   const firstRender = useRef(true);
+
+  const presetsData = route.params;
+
+  // 프리셋 클릭시 - 음악 플레이되게 하는 기능
+  useEffect(() => {
+    if (presetsData === undefined) {
+      return;
+    }
+    setPreset(presetsData.presetsData);
+  }, [presetsData]);
 
   useEffect(() => {
     // console.log(firstRender);
@@ -33,27 +46,9 @@ function SoundsScreen({ navigation }) {
     let date = JSON.stringify(new Date());
 
     try {
-      // AsyncStorage의 모든 키 가져오기
-      let keys = await AsyncStorage.getAllKeys();
-      console.log(keys);
       // AsyncStorage에 값 저장하기
-      console.log(keys.length);
-      await AsyncStorage.setItem(
-        // `preset${keys.length + 1}`,
-        date,
-        JSON.stringify(value)
-      );
+      await AsyncStorage.setItem(date, JSON.stringify(value));
     } catch (e) {}
-  };
-  const resetData = async () => {
-    try {
-      await AsyncStorage.clear();
-    } catch (e) {
-      // saving error
-    }
-
-    setSaveClicked(saveClicked + 1);
-    // console.log(selectedItem);
   };
 
   // soundcard들을 렌더링하는 function
@@ -92,12 +87,20 @@ function SoundsScreen({ navigation }) {
           ListHeaderComponent={
             <View style={styles.listHeadContainer}>
               <Text style={styles.screenHeader}>Goodnight, {"\n"}Summer</Text>
-              <Text
-                style={styles.screenHeader}
+
+              {/* <MaterialCommunityIcons
+                name="folder-music"
+                size={34}
+                color="#fff"
                 onPress={() => navigation.navigate("presetScreen")}
-              >
-                saved
-              </Text>
+              /> */}
+              <Entypo
+                name="folder-music"
+                size={34}
+                color="#fff"
+                style={styles.presetIcon}
+                onPress={() => navigation.navigate("presetScreen")}
+              />
             </View>
           }
           contentContainerStyle={{
@@ -117,26 +120,21 @@ function SoundsScreen({ navigation }) {
         />
         <TouchableOpacity
           style={{
-            width: 40,
-            height: 40,
+            width: 54,
+            height: 54,
             backgroundColor: "#000",
             position: "absolute",
             right: 20,
             bottom: 20,
+            borderRadius: 50,
+            alignItems: "center",
+            justifyContent: "center",
           }}
           onPress={() => setSaveClicked(saveClicked + 1)}
-        ></TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            width: 40,
-            height: 40,
-            backgroundColor: "green",
-            position: "absolute",
-            left: 20,
-            bottom: 20,
-          }}
-          onPress={() => resetData()}
-        ></TouchableOpacity>
+        >
+          <Feather name="heart" size={24} color="#fff" />
+          <Text style={styles.subText}>Save</Text>
+        </TouchableOpacity>
       </View>
     </Screen>
   );
@@ -153,6 +151,8 @@ const styles = StyleSheet.create({
   },
   listHeadContainer: {
     flexDirection: "row",
+    // alignItems: "center",
+    justifyContent: "space-between",
   },
   row: {
     // flex: 1,
@@ -172,10 +172,17 @@ const styles = StyleSheet.create({
     color: "#fff",
     marginBottom: 40,
   },
+  subText: {
+    fontSize: 14,
+    color: "#fff",
+    marginTop: -2,
+    // marginBottom: 40,
+  },
   soundCardHeader: {
     fontSize: 20,
     color: "#fff",
   },
+  presetIcon: {},
 });
 
 export default SoundsScreen;

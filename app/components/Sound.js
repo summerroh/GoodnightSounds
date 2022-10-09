@@ -17,6 +17,8 @@ function Sound({
   const [soundObj, setSoundObj] = useState(new Audio.Sound());
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(0.5);
+  // 새 preset이 들어왔을때 기존 preset을 리셋해주기 위한 state
+  const [presetList, setPresetList] = useState([]);
 
   // saveClicked dependency로 들어간 useEffect가 첫 렌더시에 실행되지 않게 해줌
   const firstRender = useRef(true);
@@ -53,19 +55,34 @@ function Sound({
       ]);
     }
   }, [saveClicked]);
-
-  // 프리셋 로드버튼눌렀을때
+  // 프리셋 로드버튼눌렀을때 (음악 플레이 기능)
   useEffect(() => {
+    if (isPlaying) {
+      stopSound();
+    }
     for (i = 0; i < preset.length; i++) {
       if (preset[i].itemName === itemName) {
-        handlePress(itemMusic);
+        playSound(itemMusic);
         volumeControl(preset[i].volume);
       }
     }
   }, [preset]);
 
+  // 프리셋 로드버튼눌렀을때 (음악 플레이 기능)
+  const playSound = async (audio) => {
+    setIsPlaying(true);
+    await soundObj.loadAsync(audio, { shouldPlay: true });
+    await soundObj.setVolumeAsync(0.5);
+  };
+  // 프리셋 로드버튼눌렀을때 (음악 중지 기능)
+  const stopSound = async () => {
+    setIsPlaying(false);
+    await soundObj.unloadAsync();
+  };
+
   const handlePress = async (audio) => {
     setIsPlaying(!isPlaying);
+    setVolume(0.5);
 
     if (!isPlaying) {
       await soundObj.loadAsync(audio, { shouldPlay: true });
