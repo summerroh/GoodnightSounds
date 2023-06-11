@@ -18,7 +18,8 @@ function PresetScreen({ navigation }) {
   const [presets, setPresets] = useState([]);
   const [keys, setKeys] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [text, onChangeText] = useState("Useless Text");
+  const [text, onChangeText] = useState("text");
+  const [currentItem, setCurrentItem] = useState("");
 
   useEffect(() => {
     getData();
@@ -65,27 +66,65 @@ function PresetScreen({ navigation }) {
     }
   };
 
-  const editName = (item) => {
-    console.log("edit name ");
-    setModalVisible(true);
+  const editName = async (item) => {
+    setModalVisible(!modalVisible);
+    console.log("edit name to: ", text);
+
+    let value = { presetName: text };
+    // 원래의 preset data 가져오기
+    const currentPresetsData = JSON.parse(await AsyncStorage.getItem(item));
+    currentPresetsData.push(value);
+
     // 유저가 입력한 이름 저장하기
-    // try {
-    //   // AsyncStorage에 값 저장하기
-    //   await AsyncStorage.setItem(item, JSON.stringify(value));
-    // } catch (e) {}
+    try {
+      // AsyncStorage에 값 저장하기
+      await AsyncStorage.setItem(item, JSON.stringify(currentPresetsData));
+    } catch (e) {}
+  };
+
+  const renderName = (item) => {
+    // const data = JSON.parse(await AsyncStorage.getItem(item));
+    // getPresetName();
+    // console.log(data.presetName);
+    return "name";
+  };
+  // const getPresetName = async (item) => {
+  //   const data = [];
+  //   try {
+  //     data = JSON.parse(await AsyncStorage.getItem(item));
+  //   } catch (e) {}
+  //   return data;
+  // };
+
+  const getPresetName = async (item) => {
+    try {
+      const data = JSON.parse(await AsyncStorage.getItem(item));
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // soundcard들을 렌더링하는 function
   const renderItem = ({ item }) => {
+    // 이름(presetName) 불러오기
+    let name = "1";
+    const namePromise = getPresetName(item);
+    let nameResolved = Promise.resolve(namePromise);
+    nameResolved.then(function (val) {
+      // 데이터 어레이의 마지막 오브젝트에 presetName 이라는 키가 있으면
+      // name을 그 키의 값(이름)으로 설정해준다
+      if (val[val.length - 1].presetName) {
+        name = val[val.length - 1].presetName;
+        console.log("name1:", name);
+      }
+    });
+    console.log("name:", name);
     return (
       <View>
         <TouchableOpacity
           onPress={() => handlePress(item)}
-          style={[
-            styles.soundCard,
-            // { backgroundColor: isPlaying ? "#bebebe" : "#fff" },
-            { backgroundColor: "#fff" },
-          ]}
+          style={[styles.soundCard]}
         >
           <Pressable
             style={{
@@ -96,7 +135,10 @@ function PresetScreen({ navigation }) {
               top: 10,
               zIndex: 10,
             }}
-            onPress={() => editName(item)}
+            onPress={() => {
+              setModalVisible(true);
+              setCurrentItem(item);
+            }}
           >
             <Feather name="edit" size={24} color="black" />
           </Pressable>
@@ -114,7 +156,7 @@ function PresetScreen({ navigation }) {
             <Feather name="x" size={24} color="#00003F" />
           </Pressable>
 
-          <Text style={[styles.text, { color: "#000" }]}>{item}</Text>
+          <Text style={[styles.text, { color: "#000" }]}>{name}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -143,13 +185,12 @@ function PresetScreen({ navigation }) {
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <Text>Hello World!</Text>
               <TextInput onChangeText={onChangeText} value={text} />
               <Pressable
                 style={[styles.button, styles.buttonClose]}
-                onPress={() => setModalVisible(!modalVisible)}
+                onPress={() => editName(currentItem)}
               >
-                <Text style={styles.textStyle}>Hide Modal</Text>
+                <Text style={styles.textStyle}>Change Name</Text>
               </Pressable>
             </View>
           </View>
