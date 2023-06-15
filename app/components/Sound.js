@@ -71,8 +71,12 @@ function Sound({
   // 프리셋 로드버튼눌렀을때 (음악 플레이 기능)
   const playSound = async (audio) => {
     setIsPlaying(true);
-    await soundObj.loadAsync(audio, { shouldPlay: true });
-    await soundObj.setVolumeAsync(0.5);
+    if (audio) {
+      await soundObj.loadAsync(audio, { shouldPlay: true });
+      await soundObj.setVolumeAsync(0.5);
+    } else {
+      console.error("playsound(): Cannot load audio from a null source.");
+    }
   };
   // 프리셋 로드버튼눌렀을때 (음악 중지 기능)
   const stopSound = async () => {

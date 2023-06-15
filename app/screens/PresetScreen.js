@@ -13,6 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Feather } from "@expo/vector-icons";
 
 import Screen from "../components/Screen";
+import NameModal from "../components/NameModal";
 
 function PresetScreen({ navigation }) {
   const [presets, setPresets] = useState([]);
@@ -107,6 +108,7 @@ function PresetScreen({ navigation }) {
 
   // soundcard들을 렌더링하는 function
   const renderItem = ({ item }) => {
+    console.log("preset item:", item);
     // 이름(presetName) 불러오기
     let name = "1";
     const namePromise = getPresetName(item);
@@ -175,26 +177,14 @@ function PresetScreen({ navigation }) {
           <Text style={styles.screenHeader}>Saved Presets</Text>
         </View>
 
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <TextInput onChangeText={onChangeText} value={text} />
-              <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => editName(currentItem)}
-              >
-                <Text style={styles.textStyle}>Change Name</Text>
-              </Pressable>
-            </View>
-          </View>
-        </Modal>
+        <NameModal
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          onPressFunc={editName}
+          onChangeText={onChangeText}
+          text={text}
+          currentItem={currentItem}
+        />
 
         <FlatList
           numColumns={2}
@@ -262,38 +252,6 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "black",
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonOpen: {
-    backgroundColor: "#F194FF",
-  },
-  buttonClose: {
-    backgroundColor: "#2196F3",
   },
 });
 

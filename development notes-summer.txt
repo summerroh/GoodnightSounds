@@ -5,6 +5,8 @@ SoundScreen의 selectedItem 값이 업데이트됨.
 그러면 SoundScreen의 useEffect가 발동되어 AsyncStorage에 값이 저장됨
 *************************************************************
 
+save 버튼 누르면 프리셋 이름 지정하는 모달이 뜨고 그 이름을 asyncStorage에 같이 저장해준다 -> 구현해야함
+
 무료 ASMR 사운드 구해보기
 프리셋저장기능하고 화면 구현중
 
