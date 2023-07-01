@@ -16,11 +16,15 @@ import { Feather } from "@expo/vector-icons";
 import Screen from "../components/Screen";
 import Sound from "../components/Sound";
 import { sounds } from "../data/Data";
+import SetNameModal from "../components/SetNameModal";
 
 function SoundsScreen({ navigation, route }) {
   const [selectedItem, setSelectedItem] = useState([]);
   const [saveClicked, setSaveClicked] = useState(0);
   const [preset, setPreset] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [text, onChangeText] = useState("Preset Name");
+
   // selectedItem이 dependency로 들어간 useEffect가 첫 렌더시에 실행되지 않게 해줌
   const firstRender = useRef(true);
 
@@ -36,18 +40,24 @@ function SoundsScreen({ navigation, route }) {
 
   useEffect(() => {
     // console.log(firstRender);
-    if (firstRender.current === false) {
-      storeData(selectedItem);
+    if (firstRender.current === false && selectedItem.length > 0) {
+      // storeData(selectedItem);
+      setModalVisible(true);
     }
     firstRender.current = false;
   }, [selectedItem]);
 
   const storeData = async (value) => {
+    setModalVisible(false);
+    // console.log("value", value);
+    // Preset Name 넣어주기
+    let valueWithName = [...value, { presetName: text }];
+
     let date = JSON.stringify(new Date());
 
     try {
       // AsyncStorage에 값 저장하기
-      await AsyncStorage.setItem(date, JSON.stringify(value));
+      await AsyncStorage.setItem(date, JSON.stringify(valueWithName));
     } catch (e) {}
   };
 
@@ -80,9 +90,22 @@ function SoundsScreen({ navigation, route }) {
     );
   };
 
+  const onSave = () => {
+    setSaveClicked(saveClicked + 1);
+  };
+
   return (
     <Screen style={styles.screen}>
       <View style={styles.container}>
+        <SetNameModal
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          onPressFunc={storeData}
+          onChangeText={onChangeText}
+          text={text}
+          currentItem={selectedItem}
+        />
+
         <SectionList
           ListHeaderComponent={
             <View style={styles.listHeadContainer}>
@@ -130,7 +153,7 @@ function SoundsScreen({ navigation, route }) {
             alignItems: "center",
             justifyContent: "center",
           }}
-          onPress={() => setSaveClicked(saveClicked + 1)}
+          onPress={() => onSave()}
         >
           <Feather name="heart" size={24} color="#fff" />
           <Text style={styles.subText}>Save</Text>

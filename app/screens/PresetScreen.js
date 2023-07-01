@@ -6,8 +6,6 @@ import {
   FlatList,
   TouchableOpacity,
   Pressable,
-  Modal,
-  TextInput,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Feather } from "@expo/vector-icons";
@@ -16,10 +14,9 @@ import Screen from "../components/Screen";
 import NameModal from "../components/NameModal";
 
 function PresetScreen({ navigation }) {
-  const [presets, setPresets] = useState([]);
-  const [keys, setKeys] = useState([]);
+  const [presetData, setPresetData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [text, onChangeText] = useState("text");
+  const [text, onChangeText] = useState("Preset Name");
   const [currentItem, setCurrentItem] = useState("");
 
   useEffect(() => {
@@ -31,16 +28,26 @@ function PresetScreen({ navigation }) {
     try {
       // AsyncStorage의 모든 키 가져오기
       let keys = await AsyncStorage.getAllKeys();
-      setKeys(keys);
+      // AsyncStorage의 모든 데이터 가져오기
+      const presetData = await AsyncStorage.multiGet(keys);
+
+      const parsedData = presetData.map((item) => {
+        const [key, value] = item;
+        return [key, JSON.parse(value)];
+      });
+
+      setPresetData(parsedData);
+
+      console.log("presetData", parsedData);
     } catch (error) {
       console.log(error);
     }
   };
 
   // 프리셋 삭제 기능
-  const deletePreset = async (item) => {
+  const deletePreset = async (key) => {
     try {
-      await AsyncStorage.removeItem(item);
+      await AsyncStorage.removeItem(key);
       let keys = await AsyncStorage.getAllKeys();
       setKeys(keys);
     } catch (e) {}
@@ -57,10 +64,10 @@ function PresetScreen({ navigation }) {
 
   // 프리셋 클릭시 - 음악 플레이되게 하는 기능
   // (SoundScreen의 preset을 dependency로 하는 useEffect와 연결됨)
-  const handlePress = async (item) => {
+  const handlePress = async (key) => {
     try {
-      const presetsData = JSON.parse(await AsyncStorage.getItem(item));
-      console.log(presetsData);
+      const presetsData = JSON.parse(await AsyncStorage.getItem(key));
+      // console.log(presetsData);
       navigation.navigate("soundsScreen", { presetsData: presetsData });
     } catch (error) {
       console.log(error);
@@ -69,63 +76,38 @@ function PresetScreen({ navigation }) {
 
   const editName = async (item) => {
     setModalVisible(!modalVisible);
-    console.log("edit name to: ", text);
 
-    let value = { presetName: text };
-    // 원래의 preset data 가져오기
-    const currentPresetsData = JSON.parse(await AsyncStorage.getItem(item));
-    currentPresetsData.push(value);
+    console.log("edit this item's name");
 
+    let key = item[0];
+
+    // 기존 데이터에 이름을 새로 입력한 text로 넣어서 AsyncStorage에 저장해 주기
+    // Find the item with the "presetName" key and update its value
+    const updatedItem = item.map((item) => {
+      if (item.presetName) {
+        return { ...item, presetName: text };
+      }
+      return item;
+    });
     // 유저가 입력한 이름 저장하기
     try {
       // AsyncStorage에 값 저장하기
-      await AsyncStorage.setItem(item, JSON.stringify(currentPresetsData));
-    } catch (e) {}
-  };
-
-  const renderName = (item) => {
-    // const data = JSON.parse(await AsyncStorage.getItem(item));
-    // getPresetName();
-    // console.log(data.presetName);
-    return "name";
-  };
-  // const getPresetName = async (item) => {
-  //   const data = [];
-  //   try {
-  //     data = JSON.parse(await AsyncStorage.getItem(item));
-  //   } catch (e) {}
-  //   return data;
-  // };
-
-  const getPresetName = async (item) => {
-    try {
-      const data = JSON.parse(await AsyncStorage.getItem(item));
-      return data;
-    } catch (error) {
-      console.log(error);
+      await AsyncStorage.setItem(key, JSON.stringify(updatedItem));
+    } catch (e) {
+      console.log("error while updating the preset name", e);
     }
   };
 
   // soundcard들을 렌더링하는 function
   const renderItem = ({ item }) => {
-    console.log("preset item:", item);
-    // 이름(presetName) 불러오기
-    let name = "1";
-    const namePromise = getPresetName(item);
-    let nameResolved = Promise.resolve(namePromise);
-    nameResolved.then(function (val) {
-      // 데이터 어레이의 마지막 오브젝트에 presetName 이라는 키가 있으면
-      // name을 그 키의 값(이름)으로 설정해준다
-      if (val[val.length - 1].presetName) {
-        name = val[val.length - 1].presetName;
-        console.log("name1:", name);
-      }
-    });
-    console.log("name:", name);
+    console.log("preset item--------:", item);
+    // 이름(presetName) 불러오기 (item[0]은 key(date)이고 item[1]에 itemName과 presetName 정보가 있다.)
+    const presetName = item[1].find((preset) => preset.presetName)?.presetName;
+
     return (
       <View>
         <TouchableOpacity
-          onPress={() => handlePress(item)}
+          onPress={() => handlePress(item[0])}
           style={[styles.soundCard]}
         >
           <Pressable
@@ -140,6 +122,7 @@ function PresetScreen({ navigation }) {
             onPress={() => {
               setModalVisible(true);
               setCurrentItem(item);
+              // editName(item);
             }}
           >
             <Feather name="edit" size={24} color="black" />
@@ -153,12 +136,12 @@ function PresetScreen({ navigation }) {
               top: 10,
               zIndex: 10,
             }}
-            onPress={() => deletePreset(item)}
+            onPress={() => deletePreset(item[0])}
           >
             <Feather name="x" size={24} color="#00003F" />
           </Pressable>
 
-          <Text style={[styles.text, { color: "#000" }]}>{name}</Text>
+          <Text style={[styles.text, { color: "#000" }]}>{presetName}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -191,7 +174,7 @@ function PresetScreen({ navigation }) {
           columnWrapperStyle={styles.row}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
-          data={keys}
+          data={presetData}
           keyExtractor={(index) => index}
           renderItem={renderItem}
         ></FlatList>
