@@ -16,7 +16,7 @@ import NameModal from "../components/NameModal";
 function PresetScreen({ navigation }) {
   const [presetData, setPresetData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [text, onChangeText] = useState("Preset Name");
+  const [text, onChangeText] = useState("Default Preset Name");
   const [currentItem, setCurrentItem] = useState("");
 
   useEffect(() => {
@@ -38,7 +38,7 @@ function PresetScreen({ navigation }) {
 
       setPresetData(parsedData);
 
-      console.log("presetData", parsedData);
+      // console.log("presetData", parsedData);
     } catch (error) {
       console.log(error);
     }
@@ -48,17 +48,17 @@ function PresetScreen({ navigation }) {
   const deletePreset = async (key) => {
     try {
       await AsyncStorage.removeItem(key);
-      let keys = await AsyncStorage.getAllKeys();
-      setKeys(keys);
-    } catch (e) {}
+      getData();
+    } catch (e) {
+      console.log("Error while deleting the preset", e);
+    }
   };
 
   // 프리셋 리셋 기능 (버튼 숨겨놓음)
   const resetData = async () => {
     try {
       await AsyncStorage.clear();
-      let keys = await AsyncStorage.getAllKeys();
-      setKeys(keys);
+      getData();
     } catch (e) {}
   };
 
@@ -77,30 +77,32 @@ function PresetScreen({ navigation }) {
   const editName = async (item) => {
     setModalVisible(!modalVisible);
 
-    console.log("edit this item's name");
-
     let key = item[0];
 
-    // 기존 데이터에 이름을 새로 입력한 text로 넣어서 AsyncStorage에 저장해 주기
+    // Parse the JSON data stored in AsyncStorage
+    let storedData = await AsyncStorage.getItem(key);
+    let parsedData = JSON.parse(storedData);
+
     // Find the item with the "presetName" key and update its value
-    const updatedItem = item.map((item) => {
-      if (item.presetName) {
-        return { ...item, presetName: text };
+    const updatedItem = parsedData.map((dataItem) => {
+      if (dataItem.presetName) {
+        return { ...dataItem, presetName: text };
       }
-      return item;
+      return dataItem;
     });
-    // 유저가 입력한 이름 저장하기
+
+    // Save the updated data back to AsyncStorage
     try {
-      // AsyncStorage에 값 저장하기
       await AsyncStorage.setItem(key, JSON.stringify(updatedItem));
     } catch (e) {
       console.log("error while updating the preset name", e);
     }
+    getData();
   };
 
   // soundcard들을 렌더링하는 function
   const renderItem = ({ item }) => {
-    console.log("preset item--------:", item);
+    // console.log("preset item--------:", item);
     // 이름(presetName) 불러오기 (item[0]은 key(date)이고 item[1]에 itemName과 presetName 정보가 있다.)
     const presetName = item[1].find((preset) => preset.presetName)?.presetName;
 
@@ -163,9 +165,8 @@ function PresetScreen({ navigation }) {
         <NameModal
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
-          onPressFunc={editName}
+          editName={editName}
           onChangeText={onChangeText}
-          text={text}
           currentItem={currentItem}
         />
 

@@ -6,16 +6,35 @@ import {
   TextInput,
   Pressable,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { Feather } from "@expo/vector-icons";
 
 export default function NameModal({
   modalVisible,
   setModalVisible,
-  onPressFunc,
-  text,
+  editName,
   onChangeText,
   currentItem,
 }) {
+  const [presetName, setPresetName] = useState("");
+
+  // console.log("currentItem---------", currentItem);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // 한 프리셋의 수정 버튼이 클릭된 경우 그 프리셋의 이름을 불러온다.
+      if (currentItem) {
+        let presetName = currentItem[1].find(
+          (preset) => preset.presetName
+        )?.presetName;
+        setPresetName(presetName);
+        onChangeText(presetName);
+      }
+      return () => {};
+    }, [currentItem])
+  );
+
   return (
     <Modal
       animationType="slide"
@@ -27,10 +46,23 @@ export default function NameModal({
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <TextInput onChangeText={onChangeText} value={text} />
+          <Pressable
+            style={{
+              width: 40,
+              height: 40,
+              position: "absolute",
+              right: 0,
+              top: 10,
+              zIndex: 10,
+            }}
+            onPress={() => setModalVisible(false)}
+          >
+            <Feather name="x" size={24} color="#00003F" />
+          </Pressable>
+          <TextInput onChangeText={onChangeText} defaultValue={presetName} />
           <Pressable
             style={[styles.button, styles.buttonClose]}
-            onPress={() => onPressFunc(currentItem)}
+            onPress={() => editName(currentItem)}
           >
             <Text style={styles.textStyle}>Change Name</Text>
           </Pressable>
@@ -75,5 +107,8 @@ const styles = StyleSheet.create({
   },
   buttonClose: {
     backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "#fff",
   },
 });

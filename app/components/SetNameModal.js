@@ -7,6 +7,7 @@ import {
   Pressable,
 } from "react-native";
 import React from "react";
+import { Feather } from "@expo/vector-icons";
 
 export default function SetNameModal({
   modalVisible,
@@ -27,6 +28,19 @@ export default function SetNameModal({
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
+          <Pressable
+            style={{
+              width: 40,
+              height: 40,
+              position: "absolute",
+              right: 0,
+              top: 10,
+              zIndex: 10,
+            }}
+            onPress={() => setModalVisible(false)}
+          >
+            <Feather name="x" size={24} color="#00003F" />
+          </Pressable>
           <TextInput onChangeText={onChangeText} value={text} />
           <Pressable
             style={[styles.button, styles.buttonClose]}
@@ -75,5 +89,8 @@ const styles = StyleSheet.create({
   },
   buttonClose: {
     backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "#fff",
   },
 });
