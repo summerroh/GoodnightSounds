@@ -29,7 +29,6 @@ function SoundsScreen({ navigation, route }) {
   const [text, onChangeText] = useState("Preset Name");
   const [data, setData] = useState([]);
 
-  // Firestore에서 데이터 받아오기
   useFocusEffect(
     React.useCallback(() => {
       getData();
@@ -37,15 +36,14 @@ function SoundsScreen({ navigation, route }) {
     }, [])
   );
 
+  // Firestore에서 데이터 받아오기
   const getData = async () => {
     const querySnapshot = await getDocs(collection(db, "data"));
 
     const documents = querySnapshot.docs.map((doc) => ({
       id: doc.id,
-      title: doc.data().title,
       data: [doc.data().data],
     }));
-    console.log("documents, ", documents);
     setData(documents);
   };
 
@@ -90,7 +88,7 @@ function SoundsScreen({ navigation, route }) {
     return (
       <Sound
         itemName={item.name}
-        itemMusic={item.music}
+        itemMusic={item.sound}
         iconName={item.iconName}
         initialPlay={false}
         setSelectedItem={setSelectedItem}
@@ -101,7 +99,6 @@ function SoundsScreen({ navigation, route }) {
   };
 
   const flatList = ({ item }) => {
-    console.log(item);
     return (
       <FlatList
         numColumns={4}
@@ -136,12 +133,6 @@ function SoundsScreen({ navigation, route }) {
             <View style={styles.listHeadContainer}>
               <Text style={styles.screenHeader}>Goodnight, {"\n"}Summer</Text>
 
-              {/* <MaterialCommunityIcons
-                name="folder-music"
-                size={34}
-                color="#fff"
-                onPress={() => navigation.navigate("presetScreen")}
-              /> */}
               <Entypo
                 name="folder-music"
                 size={34}
@@ -159,12 +150,11 @@ function SoundsScreen({ navigation, route }) {
           }}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
-          // sections={sounds}
           sections={data}
-          keyExtractor={(item, index) => item + index}
+          keyExtractor={(item) => item.id}
           renderItem={flatList}
-          renderSectionHeader={({ section: { title } }) => (
-            <Text style={styles.soundCardHeader}>{title}</Text>
+          renderSectionHeader={({ section: { id } }) => (
+            <Text style={styles.soundCardHeader}>{id}</Text>
           )}
         />
         <TouchableOpacity
@@ -206,15 +196,8 @@ const styles = StyleSheet.create({
   row: {
     // flex: 1,
     justifyContent: "space-between",
+    // justifyContent: "flex-start",
     marginVertical: 15,
-  },
-  soundCard: {
-    backgroundColor: "#fff",
-    width: 70,
-    height: 70,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
   },
   screenHeader: {
     fontSize: 50,

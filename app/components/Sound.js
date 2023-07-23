@@ -71,10 +71,13 @@ function Sound({
   // 프리셋 로드버튼눌렀을때 (음악 플레이 기능)
   const playSound = async (audio) => {
     setIsPlaying(true);
-    console.log("Ddddddddddddddddd", audio);
     if (audio) {
-      await soundObj.loadAsync({ uri: audio }, { shouldPlay: true });
+      await soundObj.loadAsync(
+        { uri: audio },
+        { shouldPlay: true, isLooping: true }
+      );
       await soundObj.setVolumeAsync(0.5);
+      // await soundObj.setIsLoopingAsync(true);
     } else {
       console.error("playsound(): Cannot load audio from a null source.");
     }
@@ -90,7 +93,10 @@ function Sound({
     setVolume(0.5);
 
     if (!isPlaying) {
-      await soundObj.loadAsync({ uri: audio }, { shouldPlay: true });
+      await soundObj.loadAsync(
+        { uri: audio },
+        { shouldPlay: true, isLooping: true }
+      );
       await soundObj.setVolumeAsync(0.5);
     } else {
       await soundObj.unloadAsync();
@@ -150,6 +156,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 10,
+    // marginRight: 10,
     alignItems: "center",
     justifyContent: "center",
   },
