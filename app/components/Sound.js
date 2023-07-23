@@ -71,8 +71,9 @@ function Sound({
   // 프리셋 로드버튼눌렀을때 (음악 플레이 기능)
   const playSound = async (audio) => {
     setIsPlaying(true);
+    console.log("Ddddddddddddddddd", audio);
     if (audio) {
-      await soundObj.loadAsync(audio, { shouldPlay: true });
+      await soundObj.loadAsync({ uri: audio }, { shouldPlay: true });
       await soundObj.setVolumeAsync(0.5);
     } else {
       console.error("playsound(): Cannot load audio from a null source.");
@@ -89,7 +90,7 @@ function Sound({
     setVolume(0.5);
 
     if (!isPlaying) {
-      await soundObj.loadAsync(audio, { shouldPlay: true });
+      await soundObj.loadAsync({ uri: audio }, { shouldPlay: true });
       await soundObj.setVolumeAsync(0.5);
     } else {
       await soundObj.unloadAsync();

@@ -9,6 +9,8 @@ import {
   Button,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { db } from "../../firebaseConfig";
+import { collection, getDocs } from "firebase/firestore";
 
 import { Entypo } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -17,6 +19,7 @@ import Screen from "../components/Screen";
 import Sound from "../components/Sound";
 import { sounds } from "../data/Data";
 import SetNameModal from "../components/SetNameModal";
+import { useFocusEffect } from "@react-navigation/native";
 
 function SoundsScreen({ navigation, route }) {
   const [selectedItem, setSelectedItem] = useState([]);
@@ -24,6 +27,27 @@ function SoundsScreen({ navigation, route }) {
   const [preset, setPreset] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [text, onChangeText] = useState("Preset Name");
+  const [data, setData] = useState([]);
+
+  // Firestore에서 데이터 받아오기
+  useFocusEffect(
+    React.useCallback(() => {
+      getData();
+      return () => {};
+    }, [])
+  );
+
+  const getData = async () => {
+    const querySnapshot = await getDocs(collection(db, "data"));
+
+    const documents = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      title: doc.data().title,
+      data: [doc.data().data],
+    }));
+    console.log("documents, ", documents);
+    setData(documents);
+  };
 
   // selectedItem이 dependency로 들어간 useEffect가 첫 렌더시에 실행되지 않게 해줌
   const firstRender = useRef(true);
@@ -77,6 +101,7 @@ function SoundsScreen({ navigation, route }) {
   };
 
   const flatList = ({ item }) => {
+    console.log(item);
     return (
       <FlatList
         numColumns={4}
@@ -86,7 +111,7 @@ function SoundsScreen({ navigation, route }) {
         data={item}
         keyExtractor={(Item) => Item.name}
         renderItem={renderItem}
-      ></FlatList>
+      />
     );
   };
 
@@ -134,7 +159,8 @@ function SoundsScreen({ navigation, route }) {
           }}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
-          sections={sounds}
+          // sections={sounds}
+          sections={data}
           keyExtractor={(item, index) => item + index}
           renderItem={flatList}
           renderSectionHeader={({ section: { title } }) => (
