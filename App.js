@@ -1,31 +1,141 @@
 import { StatusBar } from "expo-status-bar";
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import SoundsScreen from "./app/screens/SoundsScreen";
-import PresetScreen from "./app/screens/PresetScreen";
+import React, { useEffect, useState } from "react";
+import { Image, StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
+import SoundsScreen from "./app/screens/SoundsScreen";
+import PresetScreen from "./app/screens/PresetScreen";
+import StoryListScreen from "./app/screens/StoryListScreen";
+import StoryPlayScreen from "./app/screens/StoryPlayScreen";
+
+import { MyContext } from "./MyContext";
+import { db } from "./firebaseConfig";
+import { collection, getDocs } from "firebase/firestore";
 
 const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
 export default function App() {
-  return (
-    <NavigationContainer>
+  const [presetImages, setPresetImages] = useState("Hi there");
+  const value = { presetImages, setPresetImages };
+
+  useEffect(() => {
+    return () => {
+      getData();
+    };
+  }, []);
+
+  // Firestore에서 데이터 받아오기
+  const getData = async () => {
+    const querySnapshot = await getDocs(collection(db, "image"));
+
+    querySnapshot.docs.forEach((doc) => {
+      const urls = doc.data().urls;
+      setPresetImages(urls);
+    });
+  };
+
+  function StoryStack() {
+    return (
       <Stack.Navigator
+        initialRouteName="storyListScreen"
         screenOptions={{
           headerShown: false,
         }}
       >
-        <Stack.Screen name="soundsScreen" component={SoundsScreen} />
-        <Stack.Screen
-          name="presetScreen"
-          component={PresetScreen}
-          options={{
-            animation: "slide_from_right",
-          }}
-        />
+        <Stack.Screen name="storyListScreen" component={StoryListScreen} />
+        <Stack.Screen name="storyPlayScreen" component={StoryPlayScreen} />
       </Stack.Navigator>
-    </NavigationContainer>
+    );
+  }
+
+  return (
+    <MyContext.Provider value={value}>
+      <NavigationContainer>
+        {/* <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}
+        > */}
+        <Tab.Navigator
+          screenOptions={{
+            headerShown: false,
+            tabBarActiveTintColor: "#F6CC35",
+            tabBarItemStyle: { marginVertical: 6 },
+            tabBarStyle: { height: 56 },
+          }}
+        >
+          <Tab.Screen
+            name="StoryStack"
+            component={StoryStack}
+            options={{
+              tabBarLabel: "Home",
+              tabBarIcon: ({ color, size, focused }) => {
+                const image = focused
+                  ? require("./assets/icon.png")
+                  : require("./assets/icon.png");
+                return (
+                  <Image
+                    source={image}
+                    style={{ width: 24, height: 24, resizeMode: "contain" }}
+                  />
+                );
+              },
+            }}
+          />
+
+          <Tab.Screen
+            name="soundsScreen"
+            component={SoundsScreen}
+            options={{
+              tabBarLabel: "Sounds",
+              tabBarIcon: ({ color, size, focused }) => {
+                const image = focused
+                  ? require("./assets/icon.png")
+                  : require("./assets/icon.png");
+                return (
+                  <Image
+                    source={image}
+                    style={{ width: 24, height: 24, resizeMode: "contain" }}
+                  />
+                );
+              },
+            }}
+          />
+
+          <Tab.Screen
+            name="presetScreen"
+            component={PresetScreen}
+            options={{
+              tabBarLabel: "Presets",
+              tabBarIcon: ({ color, size, focused }) => {
+                const image = focused
+                  ? require("./assets/icon.png")
+                  : require("./assets/icon.png");
+                return (
+                  <Image
+                    source={image}
+                    style={{ width: 24, height: 24, resizeMode: "contain" }}
+                  />
+                );
+              },
+            }}
+          />
+
+          {/* <Stack.Screen name="soundsScreen" component={SoundsScreen} />
+          <Stack.Screen
+            name="presetScreen"
+            component={PresetScreen}
+            options={{
+              animation: "slide_from_right",
+            }}
+          /> */}
+        </Tab.Navigator>
+        {/* </Stack.Navigator> */}
+      </NavigationContainer>
+    </MyContext.Provider>
   );
 }
 

@@ -12,31 +12,7 @@ import { Feather } from "@expo/vector-icons";
 
 import defaultStyles from "../../style";
 
-export default function NameModal({
-  modalVisible,
-  setModalVisible,
-  editName,
-  onChangeText,
-  currentItem,
-}) {
-  const [presetName, setPresetName] = useState("");
-
-  // console.log("currentItem---------", currentItem);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      // 한 프리셋의 수정 버튼이 클릭된 경우 그 프리셋의 이름을 불러온다.
-      if (currentItem) {
-        let presetName = currentItem[1].find(
-          (preset) => preset.presetName
-        )?.presetName;
-        setPresetName(presetName);
-        onChangeText(presetName);
-      }
-      return () => {};
-    }, [currentItem])
-  );
-
+export default function MyModal({ modalVisible, setModalVisible, onConfirm }) {
   return (
     <Modal
       animationType="slide"
@@ -48,25 +24,18 @@ export default function NameModal({
     >
       <View style={styles.modalBackground}>
         <View style={styles.modalView}>
-          <Pressable
-            style={{
-              width: 40,
-              height: 40,
-              position: "absolute",
-              right: 0,
-              top: 10,
-              zIndex: 10,
-            }}
-            onPress={() => setModalVisible(false)}
-          >
-            <Feather name="x" size={24} color={defaultStyles.colors.primary} />
-          </Pressable>
-          <TextInput onChangeText={onChangeText} defaultValue={presetName} />
+          <Text>Do you want to leave the Story?</Text>
           <Pressable
             style={[styles.button, styles.buttonClose]}
-            onPress={() => editName(currentItem)}
+            onPress={onConfirm}
           >
-            <Text style={styles.textStyle}>Change Name</Text>
+            <Text style={styles.textStyle}>Yes</Text>
+          </Pressable>
+          <Pressable
+            style={[styles.button, styles.buttonClose]}
+            onPress={() => setModalVisible(false)}
+          >
+            <Text style={styles.textStyle}>No</Text>
           </Pressable>
         </View>
       </View>

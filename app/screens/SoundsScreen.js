@@ -17,9 +17,9 @@ import { Feather } from "@expo/vector-icons";
 
 import Screen from "../components/Screen";
 import Sound from "../components/Sound";
-import { sounds } from "../data/Data";
 import SetNameModal from "../components/SetNameModal";
 import { useFocusEffect } from "@react-navigation/native";
+import defaultStyles from "../../style";
 
 function SoundsScreen({ navigation, route }) {
   const [selectedItem, setSelectedItem] = useState([]);
@@ -31,12 +31,19 @@ function SoundsScreen({ navigation, route }) {
 
   useFocusEffect(
     React.useCallback(() => {
-      getData();
-      return () => {};
+      return () => {
+        onChangeText("Preset Name");
+      };
     }, [])
   );
 
-  // Firestore에서 데이터 받아오기
+  useEffect(() => {
+    getData();
+
+    return () => {};
+  }, []);
+
+  // Firestore에서 sounds 데이터 받아오기
   const getData = async () => {
     const querySnapshot = await getDocs(collection(db, "data"));
 
@@ -50,14 +57,18 @@ function SoundsScreen({ navigation, route }) {
   // selectedItem이 dependency로 들어간 useEffect가 첫 렌더시에 실행되지 않게 해줌
   const firstRender = useRef(true);
 
-  const presetsData = route.params;
+  const { presetsData, item, playStory } = route.params ?? {};
+  console.log("presetsData", presetsData);
 
   // 프리셋 클릭시 - 음악 플레이되게 하는 기능
   useEffect(() => {
     if (presetsData === undefined) {
       return;
     }
-    setPreset(presetsData.presetsData);
+    setPreset(presetsData);
+    if (playStory) {
+      navigation.navigate("storyPlayScreen", { item: item });
+    }
   }, [presetsData]);
 
   useEffect(() => {
@@ -71,6 +82,7 @@ function SoundsScreen({ navigation, route }) {
 
   const storeData = async (value) => {
     setModalVisible(false);
+
     // console.log("value", value);
     // Preset Name 넣어주기
     let valueWithName = [...value, { presetName: text }];
@@ -90,7 +102,6 @@ function SoundsScreen({ navigation, route }) {
         itemName={item.name}
         itemMusic={item.sound}
         iconName={item.iconName}
-        initialPlay={false}
         setSelectedItem={setSelectedItem}
         saveClicked={saveClicked}
         preset={preset}
@@ -101,7 +112,7 @@ function SoundsScreen({ navigation, route }) {
   const flatList = ({ item }) => {
     return (
       <FlatList
-        numColumns={4}
+        numColumns={3}
         columnWrapperStyle={styles.row}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
@@ -181,11 +192,11 @@ function SoundsScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: "#00003f",
+    backgroundColor: defaultStyles.colors.primary,
   },
   container: {
     flex: 1,
-    backgroundColor: "#00003f",
+    backgroundColor: defaultStyles.colors.primary,
     // justifyContent: 'center',
   },
   listHeadContainer: {
@@ -213,6 +224,8 @@ const styles = StyleSheet.create({
   soundCardHeader: {
     fontSize: 20,
     color: "#fff",
+    marginTop: 20,
+    marginBottom: -4,
   },
   presetIcon: {},
 });

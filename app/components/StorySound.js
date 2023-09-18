@@ -10,14 +10,7 @@ import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 // import { BlurView } from "expo-blur";
 import { useNavigationState } from "@react-navigation/native";
 
-function Sound({
-  itemName,
-  itemMusic,
-  iconName,
-  setSelectedItem,
-  saveClicked,
-  preset,
-}) {
+function StorySound({ itemName, itemMusic, iconName, preset }) {
   const [soundObj, setSoundObj] = useState(new Audio.Sound());
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(0.5);
@@ -25,27 +18,17 @@ function Sound({
   const [presetList, setPresetList] = useState([]);
   const [currentScreen, setCurrentScreen] = useState("");
 
-  // saveClicked dependency로 들어간 useEffect가 첫 렌더시에 실행되지 않게 해줌
   const firstRender = useRef(true);
   const isFocused = useIsFocused();
   const navigationState = useNavigationState((state) => state);
-  const currentRouteName = navigationState.routes[navigationState.index].name;
 
-  // Use the current route name to check if the screen is "StoryStack" and stop the sound accordingly
+  // 화면에서 나가면 소리 꺼지기
   useEffect(() => {
-    if (currentRouteName === "StoryStack") {
+    handlePress(itemMusic);
+    return () => {
       stopSound();
-    }
-  }, [currentRouteName, isFocused]);
-
-  // Use the current screen name to check if it's "storyPlayScreen"
-  // useEffect(() => {
-  //   console.log("currentScreen", currentScreen);
-  //   if (currentScreen === "storyPlayScreen") {
-  //     stopSound();
-  //     console.log("STOPPPPPPPPP");
-  //   }
-  // }, [currentScreen]);
+    };
+  }, [isFocused]);
 
   useEffect(() => {
     Audio.setAudioModeAsync({
@@ -59,54 +42,33 @@ function Sound({
     }).catch(console.error);
   }, []);
 
-  // 프리셋 저장버튼 눌렀을때
-  useEffect(() => {
-    if (firstRender.current === true) {
-      firstRender.current = false;
-      return;
-    }
-    if (isPlaying) {
-      setSelectedItem((prev) => [
-        // 중복된 값 안들어가도록 filter 처리해줌
-        ...prev.filter((item) => item.itemName !== itemName),
-        { itemName: itemName, volume: volume },
-      ]);
-    } else {
-      // 플레이중이 아니면 selectedItem에서 빼기
-      setSelectedItem((prev) => [
-        // 중복된 값 안들어가도록 filter 처리해줌
-        ...prev.filter((item) => item.itemName !== itemName),
-      ]);
-    }
-  }, [saveClicked]);
+  // 프리셋 로드버튼눌렀을때 (음악 플레이 기능)
+  //   useEffect(() => {
+  //     if (isPlaying) {
+  //       stopSound();
+  //     }
+  //     for (i = 0; i < preset.length; i++) {
+  //       if (preset[i].itemName === itemName) {
+  //         playSound(itemMusic);
+  //         volumeControl(preset[i].volume);
+  //       }
+  //     }
+  //   }, [preset]);
 
   // 프리셋 로드버튼눌렀을때 (음악 플레이 기능)
-  useEffect(() => {
-    if (isPlaying) {
-      stopSound();
-    }
-    for (i = 0; i < preset.length; i++) {
-      if (preset[i].itemName === itemName) {
-        playSound(itemMusic);
-        volumeControl(preset[i].volume);
-      }
-    }
-  }, [preset]);
-
-  // 프리셋 로드버튼눌렀을때 (음악 플레이 기능)
-  const playSound = async (audio) => {
-    setIsPlaying(true);
-    if (audio) {
-      await soundObj.loadAsync(
-        { uri: audio },
-        { shouldPlay: true, isLooping: true }
-      );
-      await soundObj.setVolumeAsync(0.5);
-      // await soundObj.setIsLoopingAsync(true);
-    } else {
-      console.error("playsound(): Cannot load audio from a null source.");
-    }
-  };
+  //   const playSound = async (audio) => {
+  //     setIsPlaying(true);
+  //     if (audio) {
+  //       await soundObj.loadAsync(
+  //         { uri: audio },
+  //         { shouldPlay: true, isLooping: true }
+  //       );
+  //       await soundObj.setVolumeAsync(0.5);
+  //       // await soundObj.setIsLoopingAsync(true);
+  //     } else {
+  //       console.error("playsound(): Cannot load audio from a null source.");
+  //     }
+  //   };
   // 프리셋 로드버튼눌렀을때 (음악 중지 기능)
   const stopSound = async () => {
     setIsPlaying(false);
@@ -200,4 +162,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Sound;
+export default StorySound;

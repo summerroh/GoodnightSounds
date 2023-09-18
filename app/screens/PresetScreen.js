@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -6,12 +6,16 @@ import {
   FlatList,
   TouchableOpacity,
   Pressable,
+  Image,
+  ImageBackground,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Feather } from "@expo/vector-icons";
 
 import Screen from "../components/Screen";
 import NameModal from "../components/NameModal";
+import defaultStyles from "../../style";
+import { useFocusEffect } from "@react-navigation/native";
 
 function PresetScreen({ navigation }) {
   const [presetData, setPresetData] = useState([]);
@@ -19,9 +23,12 @@ function PresetScreen({ navigation }) {
   const [text, onChangeText] = useState("Default Preset Name");
   const [currentItem, setCurrentItem] = useState("");
 
-  useEffect(() => {
-    getData();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      getData();
+      return () => {};
+    }, [])
+  );
 
   // AsyncStorage의 모든 아이템을 가져오기
   const getData = async () => {
@@ -107,6 +114,11 @@ function PresetScreen({ navigation }) {
     const presetName = item[1].find((preset) => preset.presetName)?.presetName;
 
     return (
+      // <ImageBackground
+      //   source={require("../../assets/presets/water01.png")}
+      //   style={styles.imageBackground}
+      //   resizeMode="cover"
+      // >
       <View>
         <TouchableOpacity
           onPress={() => handlePress(item[0])}
@@ -140,7 +152,7 @@ function PresetScreen({ navigation }) {
             }}
             onPress={() => deletePreset(item[0])}
           >
-            <Feather name="x" size={24} color="#00003F" />
+            <Feather name="x" size={24} color={defaultStyles.colors.primary} />
           </Pressable>
 
           <Text style={[styles.text, { color: "#000" }]}>{presetName}</Text>
@@ -153,13 +165,13 @@ function PresetScreen({ navigation }) {
     <Screen style={styles.screen}>
       <View style={styles.container}>
         <View style={styles.topBar}>
-          <Feather
+          {/* <Feather
             name="chevron-left"
             size={40}
             color="#fff"
             onPress={() => navigation.navigate("soundsScreen")}
-          />
-          <Text style={styles.screenHeader}>Saved Presets</Text>
+          /> */}
+          <Text style={styles.screenHeader}>Saved {`\n`}Presets</Text>
         </View>
 
         <NameModal
@@ -199,12 +211,12 @@ function PresetScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: "#00003f",
+    backgroundColor: defaultStyles.colors.primary,
   },
   container: {
     flex: 1,
-    backgroundColor: "#00003f",
-    paddingBottom: 30,
+    backgroundColor: defaultStyles.colors.primary,
+    // paddingBottom: 30,
     paddingTop: 20,
     paddingLeft: 20,
     paddingRight: 20,
@@ -230,12 +242,20 @@ const styles = StyleSheet.create({
     width: 150,
     height: 130,
     borderRadius: 10,
+    // height: 169,
     alignItems: "center",
     justifyContent: "center",
     padding: 10,
   },
   text: {
     color: "black",
+  },
+  imageBackground: {
+    flex: 1,
+    width: 150,
+    height: 169,
+    borderRadius: 10,
+    overflow: "hidden", // This prevents content from overflowing outside the ImageBackground
   },
 });
 

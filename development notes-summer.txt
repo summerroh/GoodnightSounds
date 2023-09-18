@@ -5,18 +5,41 @@ SoundScreen의 selectedItem 값이 업데이트됨.
 그러면 SoundScreen의 useEffect가 발동되어 AsyncStorage에 값이 저장됨
 *************************************************************
 
-사운드를 서버에서 받아와서 렌더해줘야 할듯
-무료 ASMR 사운드 구해보기
+사운드 mp3파일은 firebase storage에 업로드하고, Sound Card 데이터들은 firestore에서 받아와서 렌더해준다.
+무료 ASMR 사운드 구해보기 -> Pixabay
 
-<디자인 해야할것>
-프리셋 화면
-데이터 저장 버튼
-테이터 리셋 버튼(프리셋 화면으로 옮기기)
-프리셋 이름 저장 모달 
 
 오디오 loop설정해놔야할듯
 
-서버에 data.js에 있는 형식으로 데이터를 업로드하기
-오디오 파일은 firestore 말고, firebase starage에 업로드 해야 하는듯
+expo update 기능을 써보기
 
-서버에서 받은 데이터를 앱 내에 출력하기
+스플래시 스크린, 아이콘 디자인하기
+
+일단 이미지랑 mp3 파일 모두 Fire store & Firestore에서 가져오고, 
+나중에 유저가 많아지면 이걸 받아와서 유저 디바이스 안에 caching하는 작업을 해서 firebase에 돈이 덜 청구되게
+-> 이미지는 app.js에서 앱 실행시 한번 firestore에서 url 받아와서 context로 다른 컴포넌트들에서 쓸건데, 
+어차피 url을 이용해 firebase storage에서 가져오는거라
+context써도 계속 청구되는건가 이미지 한번 볼때마다?
+
+-> Firestore에서 데이터 fetch 해올때, useFocusEffect로 화면 전환될 때마다 계속 가져올 필요는 없다.
+왜냐하면 sound 데이터가 자주 업데이트 되는 것이 아니기 때문이다.
+
+-> Firestore에서 데이터 fetch는 useEffect로 앱 실행 후 화면 첫 렌더시에 한번씩만 가져오고,
+(cache는 궂이 필요하지 않을 것 같음, 하지만 필요할 시 https://www.youtube.com/watch?v=iQOTjUko9WM 이 영상 참고 
+영상 내용은 하루에 딱 한번 데이터를 fetch해 와서 cache에 넣어 쓰는거임)
+Firebase Storage(image 데이터들)는 cache를 구현 할 수 있나 보기
+
+프리셋 이미지도 이미지별로 ID 가 있어야 할듯 그래야 나중에 이미지를 바꿔서 url이 바뀌어도 ID로 불러올 수 있게
+App.js에서 프리셋 이미지를 firebase storage에서 url로 받아오고 ID별로 import? 저장 해준다.
+const ID = "url..." 이렇게
+그리고 이거를 context에 넣어주고 다른 스크린에서는 context에서 ID로 이미지를 불러와 사용한다.
+
+loop 재작업해야 하는 파일들
+chalk 
+cat purring
+snow walk
+forest walk
+underWater
+
+오류
+preset 재생될때 volume조절이 안된상태로 재생됨

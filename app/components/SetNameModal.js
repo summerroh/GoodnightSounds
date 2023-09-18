@@ -5,9 +5,14 @@ import {
   Modal,
   TextInput,
   Pressable,
+  Image,
+  ImageBackground,
+  FlatList,
 } from "react-native";
 import React from "react";
 import { Feather } from "@expo/vector-icons";
+
+import defaultStyles from "../../style";
 
 export default function SetNameModal({
   modalVisible,
@@ -17,6 +22,16 @@ export default function SetNameModal({
   onChangeText,
   currentItem,
 }) {
+  // /assets/presets 폴더에 있는 이미지들 전부 불러오기
+  const importAll = (r) => {
+    return r.keys().map(r);
+  };
+
+  // Import all PNG images from the assets/presets directory
+  const images = importAll(
+    require.context("../../assets/presets", false, /\.(png)$/)
+  );
+
   return (
     <Modal
       animationType="slide"
@@ -26,7 +41,7 @@ export default function SetNameModal({
         setModalVisible(false);
       }}
     >
-      <View style={styles.centeredView}>
+      <View style={styles.modalBackground}>
         <View style={styles.modalView}>
           <Pressable
             style={{
@@ -39,9 +54,39 @@ export default function SetNameModal({
             }}
             onPress={() => setModalVisible(false)}
           >
-            <Feather name="x" size={24} color="#00003F" />
+            <Feather name="x" size={24} color={defaultStyles.colors.primary} />
           </Pressable>
-          <TextInput onChangeText={onChangeText} value={text} />
+          <View style={defaultStyles.flexRow}>
+            <ImageBackground
+              source={images[8]}
+              style={styles.imageBackground}
+              resizeMode="cover"
+            >
+              <TextInput onChangeText={onChangeText} value={text} />
+            </ImageBackground>
+
+            <View style={styles.flatListContainer}>
+              <FlatList
+                numColumns={2}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+                data={images}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => {
+                  return (
+                    <>
+                      <Image
+                        source={item}
+                        style={styles.imageBackgroundSmall}
+                        resizeMode="cover"
+                      />
+                    </>
+                  );
+                }}
+              />
+            </View>
+          </View>
+
           <Pressable
             style={[styles.button, styles.buttonClose]}
             onPress={() => onPressFunc(currentItem)}
@@ -58,14 +103,16 @@ const styles = StyleSheet.create({
   text: {
     color: "black",
   },
-  centeredView: {
+  modalBackground: {
     flex: 1,
+    paddingHorizontal: 10,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22,
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
   },
   modalView: {
     margin: 20,
+    width: "100%",
     backgroundColor: "white",
     borderRadius: 20,
     padding: 35,
@@ -92,5 +139,22 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     color: "#fff",
+  },
+  imageBackground: {
+    width: 150,
+    height: 169,
+    borderRadius: 10,
+    overflow: "hidden", // This prevents content from overflowing outside the ImageBackground
+    marginRight: 5,
+  },
+  imageBackgroundSmall: {
+    width: 70,
+    height: 80,
+    marginLeft: 4,
+    marginBottom: 4,
+    borderRadius: 10,
+  },
+  flatListContainer: {
+    height: 169,
   },
 });
