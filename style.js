@@ -6,8 +6,8 @@ const screenHeight = Dimensions.get("screen").height;
 const colors = {
   white: "#ffffff",
   black: "#000000",
-  primary: "#1C1C33",
-  secondary: "#181350",
+  primary: "#212133",
+  secondary: "#353546",
   highlight: "#231D68",
 };
 const defaultStyles = {

@@ -58,7 +58,7 @@ function SoundsScreen({ navigation, route }) {
   const firstRender = useRef(true);
 
   const { presetsData, item, playStory } = route.params ?? {};
-  console.log("presetsData", presetsData);
+  // console.log("presetsData", presetsData);
 
   // 프리셋 클릭시 - 음악 플레이되게 하는 기능
   useEffect(() => {
@@ -172,7 +172,7 @@ function SoundsScreen({ navigation, route }) {
           style={{
             width: 54,
             height: 54,
-            backgroundColor: "#000",
+            backgroundColor: defaultStyles.colors.secondary,
             position: "absolute",
             right: 20,
             bottom: 20,
@@ -205,10 +205,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   row: {
-    // flex: 1,
     justifyContent: "space-between",
-    // justifyContent: "flex-start",
-    marginVertical: 15,
+    marginVertical: 5,
   },
   screenHeader: {
     fontSize: 50,
@@ -216,7 +214,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   subText: {
-    fontSize: 14,
+    fontSize: 12,
     color: "#fff",
     marginTop: -2,
     // marginBottom: 40,
@@ -225,7 +223,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "#fff",
     marginTop: 20,
-    marginBottom: -4,
+    marginBottom: 8,
   },
   presetIcon: {},
 });

@@ -18,7 +18,7 @@ import MyModal from "../components/MyModal";
 
 export default function StoryPlayScreen({ navigation, route }) {
   const { item } = route.params ?? {};
-  console.log("item", item);
+  // console.log("item", item);
 
   const [selectedItem, setSelectedItem] = useState([]);
   const [voice, setVoice] = useState(new Audio.Sound());
@@ -63,7 +63,8 @@ export default function StoryPlayScreen({ navigation, route }) {
   );
 
   const audioUrl = item.voiceUrl;
-  const fileUri = FileSystem.documentDirectory + `${item.name}.mp3`;
+  const fileUri =
+    FileSystem.documentDirectory + `${item.name}-v${item.version}.mp3`;
 
   const downloadAudio = async () => {
     try {
@@ -94,7 +95,11 @@ export default function StoryPlayScreen({ navigation, route }) {
 
       // 3. 저장되어 있을 시
       if (fileExists.exists) {
-        console.log("저장된 스토리 오디오 파일이 있습니다.");
+        console.log(
+          "저장된 스토리 오디오 파일이 있습니다.",
+          "파일 이름:",
+          fileUri
+        );
         // Voice재생
         playVoice(fileUri);
 
@@ -120,7 +125,7 @@ export default function StoryPlayScreen({ navigation, route }) {
 
   // soundcard들을 렌더링하는 function
   const renderItem = ({ item }) => {
-    console.log(item);
+    // console.log(item);
     return (
       <StorySound
         itemName={item.name}

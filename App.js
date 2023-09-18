@@ -4,6 +4,7 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Feather } from "@expo/vector-icons";
 
 import SoundsScreen from "./app/screens/SoundsScreen";
 import PresetScreen from "./app/screens/PresetScreen";
@@ -13,6 +14,7 @@ import StoryPlayScreen from "./app/screens/StoryPlayScreen";
 import { MyContext } from "./MyContext";
 import { db } from "./firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
+import defaultStyles from "./style";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -54,32 +56,35 @@ export default function App() {
   return (
     <MyContext.Provider value={value}>
       <NavigationContainer>
-        {/* <Stack.Navigator
-          screenOptions={{
-            headerShown: false,
-          }}
-        > */}
         <Tab.Navigator
           screenOptions={{
             headerShown: false,
-            tabBarActiveTintColor: "#F6CC35",
+            tabBarActiveTintColor: defaultStyles.colors.white,
+            // tabBarInactiveTintColor: defaultStyles.colors.primary,
             tabBarItemStyle: { marginVertical: 6 },
-            tabBarStyle: { height: 56 },
+            tabBarStyle: {
+              height: 56,
+              backgroundColor: defaultStyles.colors.secondary,
+            },
           }}
         >
           <Tab.Screen
             name="StoryStack"
             component={StoryStack}
             options={{
-              tabBarLabel: "Home",
-              tabBarIcon: ({ color, size, focused }) => {
-                const image = focused
-                  ? require("./assets/icon.png")
-                  : require("./assets/icon.png");
-                return (
-                  <Image
-                    source={image}
-                    style={{ width: 24, height: 24, resizeMode: "contain" }}
+              tabBarLabel: "Stories",
+              tabBarIcon: ({ focused }) => {
+                return focused ? (
+                  <Feather
+                    name="book-open"
+                    size={30}
+                    color={defaultStyles.colors.white}
+                  />
+                ) : (
+                  <Feather
+                    name="book-open"
+                    size={24}
+                    color={defaultStyles.colors.primary}
                   />
                 );
               },
@@ -91,14 +96,18 @@ export default function App() {
             component={SoundsScreen}
             options={{
               tabBarLabel: "Sounds",
-              tabBarIcon: ({ color, size, focused }) => {
-                const image = focused
-                  ? require("./assets/icon.png")
-                  : require("./assets/icon.png");
-                return (
-                  <Image
-                    source={image}
-                    style={{ width: 24, height: 24, resizeMode: "contain" }}
+              tabBarIcon: ({ focused }) => {
+                return focused ? (
+                  <Feather
+                    name="headphones"
+                    size={30}
+                    color={defaultStyles.colors.white}
+                  />
+                ) : (
+                  <Feather
+                    name="headphones"
+                    size={24}
+                    color={defaultStyles.colors.primary}
                   />
                 );
               },
@@ -110,14 +119,18 @@ export default function App() {
             component={PresetScreen}
             options={{
               tabBarLabel: "Presets",
-              tabBarIcon: ({ color, size, focused }) => {
-                const image = focused
-                  ? require("./assets/icon.png")
-                  : require("./assets/icon.png");
-                return (
-                  <Image
-                    source={image}
-                    style={{ width: 24, height: 24, resizeMode: "contain" }}
+              tabBarIcon: ({ focused }) => {
+                return focused ? (
+                  <Feather
+                    name="bookmark"
+                    size={30}
+                    color={defaultStyles.colors.white}
+                  />
+                ) : (
+                  <Feather
+                    name="bookmark"
+                    size={24}
+                    color={defaultStyles.colors.primary}
                   />
                 );
               },

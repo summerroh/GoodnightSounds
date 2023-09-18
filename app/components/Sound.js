@@ -6,8 +6,6 @@ import { Audio } from "expo-av";
 import { Slider } from "@miblanchard/react-native-slider";
 import defaultStyles from "../../style";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
-// import { BlurView } from "@react-native-community/blur";
-// import { BlurView } from "expo-blur";
 import { useNavigationState } from "@react-navigation/native";
 
 function Sound({
@@ -20,10 +18,10 @@ function Sound({
 }) {
   const [soundObj, setSoundObj] = useState(new Audio.Sound());
   const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(0.5);
+  const [volume, setVolume] = useState(0);
   // 새 preset이 들어왔을때 기존 preset을 리셋해주기 위한 state
-  const [presetList, setPresetList] = useState([]);
-  const [currentScreen, setCurrentScreen] = useState("");
+  // const [presetList, setPresetList] = useState([]);
+  // const [currentScreen, setCurrentScreen] = useState("");
 
   // saveClicked dependency로 들어간 useEffect가 첫 렌더시에 실행되지 않게 해줌
   const firstRender = useRef(true);
@@ -87,22 +85,22 @@ function Sound({
     }
     for (i = 0; i < preset.length; i++) {
       if (preset[i].itemName === itemName) {
-        playSound(itemMusic);
-        volumeControl(preset[i].volume);
+        playSound(itemMusic, preset[i].volume);
       }
     }
   }, [preset]);
 
   // 프리셋 로드버튼눌렀을때 (음악 플레이 기능)
-  const playSound = async (audio) => {
+  const playSound = async (audio, volume) => {
     setIsPlaying(true);
     if (audio) {
       await soundObj.loadAsync(
         { uri: audio },
         { shouldPlay: true, isLooping: true }
       );
-      await soundObj.setVolumeAsync(0.5);
-      // await soundObj.setIsLoopingAsync(true);
+      if (soundObj._loaded) {
+        fadeInEffect(volume);
+      }
     } else {
       console.error("playsound(): Cannot load audio from a null source.");
     }
@@ -113,16 +111,18 @@ function Sound({
     await soundObj.unloadAsync();
   };
 
+  // 사운드카드 눌렀을때
   const handlePress = async (audio) => {
     setIsPlaying(!isPlaying);
-    setVolume(0.5);
 
     if (!isPlaying) {
       await soundObj.loadAsync(
         { uri: audio },
         { shouldPlay: true, isLooping: true }
       );
-      await soundObj.setVolumeAsync(0.5);
+      if (soundObj._loaded) {
+        fadeInEffect(0.5);
+      }
     } else {
       await soundObj.unloadAsync();
     }
@@ -133,6 +133,24 @@ function Sound({
     setVolume(value);
     if (soundObj._loaded) {
       await soundObj.setVolumeAsync(value).catch(console.error);
+    }
+  };
+
+  const fadeInEffect = async (finalVolume) => {
+    const fadeDuration = 2000; // 2 seconds (adjust as needed)
+    const initialVolume = soundObj._volume || 0.0; // Use the current volume if available
+    let currentVolume = initialVolume;
+    const fadeInterval = 100; // Adjust the interval for smoother fading
+
+    while (currentVolume < finalVolume && soundObj._loaded) {
+      currentVolume +=
+        (finalVolume - initialVolume) / (fadeDuration / fadeInterval);
+
+      // Ensure that currentVolume does not exceed 1.0
+      currentVolume = Math.min(currentVolume, 1.0);
+
+      volumeControl(currentVolume);
+      await new Promise((resolve) => setTimeout(resolve, fadeInterval));
     }
   };
 
@@ -186,14 +204,12 @@ function Sound({
 const styles = StyleSheet.create({
   soundCard: {
     backgroundColor: "#fff",
-    // backgroundColor: "#ffffff80", // white의 alpha값 50%
     width: 70,
     height: 70,
     borderRadius: 24,
-    // marginRight: 10,
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
+    borderWidth: 0.5,
   },
   text: {
     color: "black",
