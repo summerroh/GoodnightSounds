@@ -172,7 +172,6 @@ const styles = StyleSheet.create({
     paddingRight: 20,
   },
   row: {
-    // flex: 1,
     justifyContent: "space-between",
     marginVertical: 15,
   },
@@ -186,12 +185,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 14,
   },
-  text: {
-    color: "black",
-    textAlign: "center",
-  },
   imageBackground: {
-    // flex: 1,
     width: 150,
     height: 170,
     borderRadius: 10,

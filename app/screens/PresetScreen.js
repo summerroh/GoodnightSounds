@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -6,8 +6,6 @@ import {
   FlatList,
   TouchableOpacity,
   Pressable,
-  Image,
-  ImageBackground,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Feather } from "@expo/vector-icons";
@@ -165,12 +163,6 @@ function PresetScreen({ navigation }) {
     <Screen style={styles.screen}>
       <View style={styles.container}>
         <View style={styles.topBar}>
-          {/* <Feather
-            name="chevron-left"
-            size={40}
-            color="#fff"
-            onPress={() => navigation.navigate("soundsScreen")}
-          /> */}
           <Text style={defaultStyles.screenHeader}>Saved {`\n`}Presets</Text>
         </View>
 
@@ -216,23 +208,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: defaultStyles.colors.primary,
-    // paddingBottom: 30,
     paddingTop: 20,
     paddingLeft: 20,
     paddingRight: 20,
   },
   row: {
-    // flex: 1,
     justifyContent: "space-between",
     marginVertical: 15,
   },
   soundCard: {
     backgroundColor: "#fff",
-    // backgroundColor: defaultStyles.colors.secondary,
     width: 150,
     height: 130,
     borderRadius: 10,
-    // height: 169,
     alignItems: "center",
     justifyContent: "center",
     padding: 10,
@@ -245,7 +233,7 @@ const styles = StyleSheet.create({
     width: 150,
     height: 169,
     borderRadius: 10,
-    overflow: "hidden", // This prevents content from overflowing outside the ImageBackground
+    overflow: "hidden",
   },
 });
 

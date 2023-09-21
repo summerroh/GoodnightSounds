@@ -6,7 +6,7 @@ import { Feather, EvilIcons } from "@expo/vector-icons";
 
 import defaultStyles from "../../style";
 import StorySound from "../components/StorySound";
-import CloseModal from "../components/MyModal";
+import CloseModal from "../components/CloseModal";
 
 export default function StoryPlayModal({
   modalVisible,
@@ -185,12 +185,10 @@ const styles = StyleSheet.create({
     backgroundColor: defaultStyles.colors.primary,
   },
   bottomContainer: {
-    // flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: defaultStyles.colors.primary,
   },
-
   row: {
     justifyContent: "center",
     marginVertical: 15,

@@ -6,14 +6,12 @@ import {
   Text,
   SectionList,
   TouchableOpacity,
-  Button,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { db } from "../../firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 
-import { Entypo } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
+import { Entypo, Feather } from "@expo/vector-icons";
 
 import Screen from "../components/Screen";
 import Sound from "../components/Sound";
@@ -199,11 +197,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: defaultStyles.colors.primary,
-    // justifyContent: 'center',
   },
   listHeadContainer: {
     flexDirection: "row",
-    // alignItems: "center",
     justifyContent: "space-between",
   },
   row: {
@@ -214,7 +210,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#fff",
     marginTop: -2,
-    // marginBottom: 40,
   },
 });
 

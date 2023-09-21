@@ -1,14 +1,11 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Modal,
-  TextInput,
-  Pressable,
-} from "react-native";
-import React, { useState } from "react";
+import { StyleSheet, Text, View, Modal, Pressable } from "react-native";
+import React from "react";
 
-export default function MyModal({ modalVisible, setModalVisible, onConfirm }) {
+export default function CloseModal({
+  modalVisible,
+  setModalVisible,
+  onConfirm,
+}) {
   return (
     <Modal
       animationType="slide"

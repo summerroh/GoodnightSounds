@@ -1,29 +1,18 @@
-import {
-  View,
-  Text,
-  Button,
-  FlatList,
-  StyleSheet,
-  BackHandler,
-} from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import { View, Text, FlatList, StyleSheet, BackHandler } from "react-native";
+import React, { useEffect, useState } from "react";
 import { Audio } from "expo-av";
 import * as FileSystem from "expo-file-system";
 import { useFocusEffect } from "@react-navigation/native";
 
 import defaultStyles from "../../style";
-import Sound from "../components/Sound";
 import StorySound from "../components/StorySound";
-import MyModal from "../components/MyModal";
+import CloseModal from "../components/CloseModal";
 
 export default function StoryPlayScreen({ navigation, route }) {
   const { item } = route.params ?? {};
-  // console.log("item", item);
 
-  const [selectedItem, setSelectedItem] = useState([]);
   const [voice, setVoice] = useState(new Audio.Sound());
   const [preset, setPreset] = useState([]);
-  const [saveClicked, setSaveClicked] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
 
   // 유저가 뒤로가기 버튼을 누를 경우 확인
@@ -148,7 +137,7 @@ export default function StoryPlayScreen({ navigation, route }) {
         renderItem={renderItem}
       />
       <Text>{item.name}</Text>
-      <MyModal
+      <CloseModal
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         onConfirm={handleConfirmLeave}
@@ -163,9 +152,7 @@ const styles = StyleSheet.create({
   },
 
   row: {
-    // flex: 1,
     justifyContent: "space-between",
-    // justifyContent: "flex-start",
     marginVertical: 15,
   },
 });
