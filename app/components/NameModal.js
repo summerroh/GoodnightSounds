@@ -59,14 +59,28 @@ export default function NameModal({
             }}
             onPress={() => setModalVisible(false)}
           >
-            <Feather name="x" size={24} color={defaultStyles.colors.primary} />
+            <Feather
+              name="x"
+              size={24}
+              color={defaultStyles.colors.grey[200]}
+            />
           </Pressable>
-          <TextInput onChangeText={onChangeText} defaultValue={presetName} />
+
+          <Text style={defaultStyles.modalTitle}>Change Name</Text>
+
+          <View style={[styles.inputBox]}>
+            <TextInput
+              style={styles.inputText}
+              onChangeText={onChangeText}
+              defaultValue={presetName}
+            />
+          </View>
+
           <Pressable
-            style={[styles.button, styles.buttonClose]}
+            style={[styles.button]}
             onPress={() => editName(currentItem)}
           >
-            <Text style={styles.textStyle}>Change Name</Text>
+            <Text style={defaultStyles.modalButton}>Confirm</Text>
           </Pressable>
         </View>
       </View>
@@ -75,9 +89,6 @@ export default function NameModal({
 }
 
 const styles = StyleSheet.create({
-  text: {
-    color: "black",
-  },
   modalBackground: {
     flex: 1,
     paddingHorizontal: 10,
@@ -87,31 +98,36 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: defaultStyles.colors.secondary,
+    borderWidth: 1,
+    borderColor: defaultStyles.colors.primary,
     borderRadius: 20,
-    padding: 35,
+    paddingHorizontal: 35,
+    paddingTop: 40,
+    paddingBottom: 20,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
   },
   button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
+    backgroundColor: defaultStyles.colors.grey[300],
+    borderRadius: 14,
+    paddingVertical: 8,
+    paddingHorizontal: 24,
+    borderWidth: 1,
+    borderColor: defaultStyles.colors.grey[200],
   },
-  buttonOpen: {
-    backgroundColor: "#F194FF",
+  inputBox: {
+    width: 200,
+    backgroundColor: defaultStyles.colors.grey[200],
+    borderRadius: 14,
+    paddingVertical: 8,
+    paddingHorizontal: 24,
+    marginTop: 20,
+    marginBottom: 10,
   },
-  buttonClose: {
-    backgroundColor: "#2196F3",
-  },
-  textStyle: {
-    color: "#fff",
+  inputText: {
+    color: defaultStyles.colors.primary,
+    fontSize: 22,
+    includeFontPadding: false,
+    fontFamily: "IBMPlexSansLight",
   },
 });

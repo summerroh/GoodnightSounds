@@ -127,7 +127,7 @@ function PresetScreen({ navigation }) {
               width: 40,
               height: 40,
               position: "absolute",
-              right: 30,
+              left: 16,
               top: 10,
               zIndex: 10,
             }}
@@ -137,23 +137,31 @@ function PresetScreen({ navigation }) {
               // editName(item);
             }}
           >
-            <Feather name="edit" size={24} color="black" />
+            <Feather
+              name="edit"
+              size={19}
+              color={defaultStyles.colors.grey[200]}
+            />
           </Pressable>
           <Pressable
             style={{
               width: 40,
               height: 40,
               position: "absolute",
-              right: 0,
+              right: -4,
               top: 10,
               zIndex: 10,
             }}
             onPress={() => deletePreset(item[0])}
           >
-            <Feather name="x" size={24} color={defaultStyles.colors.primary} />
+            <Feather
+              name="x"
+              size={21}
+              color={defaultStyles.colors.grey[200]}
+            />
           </Pressable>
 
-          <Text style={[styles.text, { color: "#000" }]}>{presetName}</Text>
+          <Text style={[defaultStyles.presetTitle]}>{presetName}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -217,13 +225,16 @@ const styles = StyleSheet.create({
     marginVertical: 15,
   },
   soundCard: {
-    backgroundColor: "#fff",
+    // backgroundColor: "#fff",
+    backgroundColor: defaultStyles.colors.secondary,
     width: 150,
     height: 130,
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
     padding: 10,
+    borderWidth: 1,
+    borderColor: defaultStyles.colors.grey[200],
   },
   text: {
     color: "black",

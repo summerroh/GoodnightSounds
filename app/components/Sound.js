@@ -161,20 +161,24 @@ function Sound({
         style={[
           styles.soundCard,
           {
-            backgroundColor: isPlaying ? "#fff" : defaultStyles.colors.primary,
-            borderColor: isPlaying ? defaultStyles.colors.primary : "#fff",
+            backgroundColor: isPlaying
+              ? defaultStyles.colors.secondary
+              : defaultStyles.colors.primary,
+            borderColor: isPlaying
+              ? defaultStyles.colors.white
+              : defaultStyles.colors.grey[200],
           },
         ]}
       >
         <MaterialCommunityIcons
           name={iconName}
           size={20}
-          color={isPlaying ? defaultStyles.colors.primary : "#fff"}
+          color={isPlaying ? defaultStyles.colors.white : "#fff"}
         />
         <Text
           style={[
             defaultStyles.soundCard,
-            { color: isPlaying ? defaultStyles.colors.primary : "#fff" },
+            { color: isPlaying ? defaultStyles.colors.white : "#fff" },
           ]}
         >
           {itemName.replace(/\\n/g, "\n")}
@@ -191,9 +195,9 @@ function Sound({
           step={0.1}
           value={volume}
           onValueChange={(value) => volumeControl(value[0])}
-          thumbStyle={{ height: 14, width: 14 }}
-          thumbTintColor="#7A7A8E"
-          minimumTrackTintColor="#7A7A8E"
+          thumbStyle={{ height: 12, width: 12 }}
+          thumbTintColor={defaultStyles.colors.grey[200]}
+          minimumTrackTintColor={defaultStyles.colors.grey[500]}
           maximumTrackTintColor={defaultStyles.colors.secondary}
         />
       )}
@@ -206,7 +210,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     width: 76,
     height: 76,
-    borderRadius: 24,
+    borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 0.5,

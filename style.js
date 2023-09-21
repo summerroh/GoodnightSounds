@@ -12,6 +12,9 @@ const colors = {
   grey: {
     100: "#8D8D8D",
     200: "#7A7A8E",
+    300: "#272739",
+    400: "#D2D2E8",
+    500: "#5E5E71",
   },
 };
 const defaultStyles = {
@@ -119,6 +122,24 @@ const defaultStyles = {
     color: "#000",
     fontFamily: "IBMPlexSansLight",
     textAlign: "center",
+  },
+  modalTitle: {
+    color: colors.grey[200],
+    fontSize: 24,
+    fontFamily: "IBMPlexSansLight",
+    textAlign: "center",
+  },
+  modalButton: {
+    color: colors.grey[200],
+    fontSize: 22,
+    includeFontPadding: false,
+    fontFamily: "IBMPlexSansLight",
+  },
+  presetTitle: {
+    color: colors.white,
+    fontSize: 18,
+    includeFontPadding: false,
+    fontFamily: "IBMPlexSansThin",
   },
 };
 

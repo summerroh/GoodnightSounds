@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "GoodnightSounds",
+    "name": "Goodnight Sounds",
     "slug": "GoodnightSounds",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -14,15 +14,11 @@
       "fallbackToCacheTimeout": 0,
       "url": "https://u.expo.dev/0808c32c-5f3a-40b7-9ca4-285ff8ef4e15"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "UIBackgroundModes": [
-          "audio"
-        ]
+        "UIBackgroundModes": ["audio"]
       }
     },
     "android": {

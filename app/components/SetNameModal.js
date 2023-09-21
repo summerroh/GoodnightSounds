@@ -5,9 +5,6 @@ import {
   Modal,
   TextInput,
   Pressable,
-  Image,
-  ImageBackground,
-  FlatList,
 } from "react-native";
 import React from "react";
 import { Feather } from "@expo/vector-icons";
@@ -23,14 +20,14 @@ export default function SetNameModal({
   currentItem,
 }) {
   // /assets/presets 폴더에 있는 이미지들 전부 불러오기
-  const importAll = (r) => {
-    return r.keys().map(r);
-  };
+  //   const importAll = (r) => {
+  //     return r.keys().map(r);
+  //   };
 
   // Import all PNG images from the assets/presets directory
-  const images = importAll(
-    require.context("../../assets/presets", false, /\.(png)$/)
-  );
+  //   const images = importAll(
+  //     require.context("../../assets/presets", false, /\.(png)$/)
+  //   );
 
   return (
     <Modal
@@ -56,42 +53,20 @@ export default function SetNameModal({
           >
             <Feather name="x" size={24} color={defaultStyles.colors.primary} />
           </Pressable>
-          <View style={defaultStyles.flexRow}>
-            <ImageBackground
-              source={images[8]}
-              style={styles.imageBackground}
-              resizeMode="cover"
-            >
-              <TextInput onChangeText={onChangeText} value={text} />
-            </ImageBackground>
 
-            <View style={styles.flatListContainer}>
-              <FlatList
-                numColumns={2}
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
-                data={images}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item }) => {
-                  return (
-                    <>
-                      <Image
-                        source={item}
-                        style={styles.imageBackgroundSmall}
-                        resizeMode="cover"
-                      />
-                    </>
-                  );
-                }}
-              />
-            </View>
+          <View style={[styles.inputBox]}>
+            <TextInput
+              style={styles.inputText}
+              onChangeText={onChangeText}
+              value={text}
+            />
           </View>
 
           <Pressable
-            style={[styles.button, styles.buttonClose]}
+            style={[styles.button]}
             onPress={() => onPressFunc(currentItem)}
           >
-            <Text style={styles.textStyle}>Save Preset</Text>
+            <Text style={defaultStyles.modalButton}>Save Preset</Text>
           </Pressable>
         </View>
       </View>
@@ -112,49 +87,42 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    width: "100%",
-    backgroundColor: "white",
+    backgroundColor: defaultStyles.colors.secondary,
+    borderWidth: 1,
+    borderColor: defaultStyles.colors.primary,
     borderRadius: 20,
-    padding: 35,
+    paddingHorizontal: 35,
+    paddingTop: 20,
+    paddingBottom: 20,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
   },
   button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonOpen: {
-    backgroundColor: "#F194FF",
-  },
-  buttonClose: {
-    backgroundColor: "#2196F3",
+    backgroundColor: defaultStyles.colors.grey[300],
+    borderRadius: 14,
+    paddingVertical: 8,
+    paddingHorizontal: 24,
+    borderWidth: 1,
+    borderColor: defaultStyles.colors.grey[200],
   },
   textStyle: {
     color: "#fff",
   },
-  imageBackground: {
-    width: 150,
-    height: 169,
-    borderRadius: 10,
-    overflow: "hidden", // This prevents content from overflowing outside the ImageBackground
-    marginRight: 5,
-  },
-  imageBackgroundSmall: {
-    width: 70,
-    height: 80,
-    marginLeft: 4,
-    marginBottom: 4,
-    borderRadius: 10,
-  },
   flatListContainer: {
     height: 169,
+  },
+  inputBox: {
+    width: 200,
+    backgroundColor: defaultStyles.colors.grey[200],
+    borderRadius: 14,
+    paddingVertical: 8,
+    paddingHorizontal: 24,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  inputText: {
+    color: defaultStyles.colors.primary,
+    fontSize: 22,
+    includeFontPadding: false,
+    fontFamily: "IBMPlexSansLight",
   },
 });
