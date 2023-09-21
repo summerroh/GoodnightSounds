@@ -173,11 +173,11 @@ function Sound({
         />
         <Text
           style={[
-            styles.text,
+            defaultStyles.soundCard,
             { color: isPlaying ? defaultStyles.colors.primary : "#fff" },
           ]}
         >
-          {itemName}
+          {itemName.replace(/\\n/g, "\n")}
         </Text>
       </TouchableOpacity>
       {isPlaying && (
@@ -192,9 +192,9 @@ function Sound({
           value={volume}
           onValueChange={(value) => volumeControl(value[0])}
           thumbStyle={{ height: 14, width: 14 }}
-          thumbTintColor="#577399"
-          minimumTrackTintColor="#FFFFFF"
-          maximumTrackTintColor="#dedede"
+          thumbTintColor="#7A7A8E"
+          minimumTrackTintColor="#7A7A8E"
+          maximumTrackTintColor={defaultStyles.colors.secondary}
         />
       )}
     </View>
@@ -204,15 +204,12 @@ function Sound({
 const styles = StyleSheet.create({
   soundCard: {
     backgroundColor: "#fff",
-    width: 70,
-    height: 70,
+    width: 76,
+    height: 76,
     borderRadius: 24,
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 0.5,
-  },
-  text: {
-    color: "black",
   },
 });
 

@@ -34,6 +34,14 @@ App.js에서 프리셋 이미지를 firebase storage에서 url로 받아오고 I
 const ID = "url..." 이렇게
 그리고 이거를 context에 넣어주고 다른 스크린에서는 context에서 ID로 이미지를 불러와 사용한다.
 
+작업중인 사항
+StoryPlayModal 디자인
+
+추가해야 할 기능들
+스토리 보이스 목소리 볼륨 조절
+폰트 추가
+
 
 오류
 preset 재생될때 volume조절이 안된상태로 재생됨
+반복재생이 무한정 되어야하는데 일정 시간 이후 꺼짐 소리들이

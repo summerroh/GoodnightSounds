@@ -142,7 +142,9 @@ function SoundsScreen({ navigation, route }) {
         <SectionList
           ListHeaderComponent={
             <View style={styles.listHeadContainer}>
-              <Text style={styles.screenHeader}>Goodnight, {"\n"}Summer</Text>
+              <Text style={defaultStyles.screenHeader}>
+                Goodnight, {"\n"}Summer
+              </Text>
 
               <Entypo
                 name="folder-music"
@@ -165,7 +167,7 @@ function SoundsScreen({ navigation, route }) {
           keyExtractor={(item) => item.id}
           renderItem={flatList}
           renderSectionHeader={({ section: { id } }) => (
-            <Text style={styles.soundCardHeader}>{id}</Text>
+            <Text style={defaultStyles.soundCardHeader}>{id}</Text>
           )}
         />
         <TouchableOpacity
@@ -208,24 +210,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginVertical: 5,
   },
-  screenHeader: {
-    fontSize: 50,
-    color: "#fff",
-    marginBottom: 40,
-  },
   subText: {
     fontSize: 12,
     color: "#fff",
     marginTop: -2,
     // marginBottom: 40,
   },
-  soundCardHeader: {
-    fontSize: 20,
-    color: "#fff",
-    marginTop: 20,
-    marginBottom: 8,
-  },
-  presetIcon: {},
 });
 
 export default SoundsScreen;

@@ -171,7 +171,7 @@ function PresetScreen({ navigation }) {
             color="#fff"
             onPress={() => navigation.navigate("soundsScreen")}
           /> */}
-          <Text style={styles.screenHeader}>Saved {`\n`}Presets</Text>
+          <Text style={defaultStyles.screenHeader}>Saved {`\n`}Presets</Text>
         </View>
 
         <NameModal
@@ -221,17 +221,6 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
   },
-  // topBar: {
-  //   flexDirection: "row",
-  //   alignItems: "center",
-  //   justifyContent: "space-between",
-  // },
-  screenHeader: {
-    fontSize: 50,
-    color: "#fff",
-    marginBottom: 40,
-    marginLeft: 6,
-  },
   row: {
     // flex: 1,
     justifyContent: "space-between",
@@ -239,6 +228,7 @@ const styles = StyleSheet.create({
   },
   soundCard: {
     backgroundColor: "#fff",
+    // backgroundColor: defaultStyles.colors.secondary,
     width: 150,
     height: 130,
     borderRadius: 10,

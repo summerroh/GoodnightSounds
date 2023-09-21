@@ -15,12 +15,8 @@ function StorySound({ itemName, itemMusic, iconName, preset }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(0.5);
   // 새 preset이 들어왔을때 기존 preset을 리셋해주기 위한 state
-  const [presetList, setPresetList] = useState([]);
-  const [currentScreen, setCurrentScreen] = useState("");
 
-  const firstRender = useRef(true);
   const isFocused = useIsFocused();
-  const navigationState = useNavigationState((state) => state);
 
   // 화면에서 나가면 소리 꺼지기
   useEffect(() => {
@@ -42,34 +38,6 @@ function StorySound({ itemName, itemMusic, iconName, preset }) {
     }).catch(console.error);
   }, []);
 
-  // 프리셋 로드버튼눌렀을때 (음악 플레이 기능)
-  //   useEffect(() => {
-  //     if (isPlaying) {
-  //       stopSound();
-  //     }
-  //     for (i = 0; i < preset.length; i++) {
-  //       if (preset[i].itemName === itemName) {
-  //         playSound(itemMusic);
-  //         volumeControl(preset[i].volume);
-  //       }
-  //     }
-  //   }, [preset]);
-
-  // 프리셋 로드버튼눌렀을때 (음악 플레이 기능)
-  //   const playSound = async (audio) => {
-  //     setIsPlaying(true);
-  //     if (audio) {
-  //       await soundObj.loadAsync(
-  //         { uri: audio },
-  //         { shouldPlay: true, isLooping: true }
-  //       );
-  //       await soundObj.setVolumeAsync(0.5);
-  //       // await soundObj.setIsLoopingAsync(true);
-  //     } else {
-  //       console.error("playsound(): Cannot load audio from a null source.");
-  //     }
-  //   };
-  // 프리셋 로드버튼눌렀을때 (음악 중지 기능)
   const stopSound = async () => {
     setIsPlaying(false);
     await soundObj.unloadAsync();
@@ -136,9 +104,9 @@ function StorySound({ itemName, itemMusic, iconName, preset }) {
           value={volume}
           onValueChange={(value) => volumeControl(value[0])}
           thumbStyle={{ height: 14, width: 14 }}
-          thumbTintColor="#577399"
-          minimumTrackTintColor="#FFFFFF"
-          maximumTrackTintColor="#dedede"
+          thumbTintColor={defaultStyles.colors.grey[200]}
+          minimumTrackTintColor={defaultStyles.colors.grey[200]}
+          maximumTrackTintColor={defaultStyles.colors.secondary}
         />
       )}
     </View>
@@ -152,7 +120,6 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 24,
-    // marginRight: 10,
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,

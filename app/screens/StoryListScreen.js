@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Feather } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 
 import { db } from "../../firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
@@ -18,16 +19,20 @@ import { collection, getDocs } from "firebase/firestore";
 import Screen from "../components/Screen";
 import NameModal from "../components/NameModal";
 import defaultStyles from "../../style";
+import StoryPlayModal from "../components/StoryPlayModal";
 
 function StoryListScreen({ navigation }) {
   const [presetData, setPresetData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [storyModalVisible, setStoryModalVisible] = useState(false);
   const [text, onChangeText] = useState("Default Preset Name");
   const [currentItem, setCurrentItem] = useState("");
   const [data, setData] = useState();
+  const [item, setItem] = useState(null);
 
   useEffect(() => {
     getData();
+    return () => setItem(null);
   }, []);
 
   // Firestore에서 stories 데이터 받아오기
@@ -45,14 +50,11 @@ function StoryListScreen({ navigation }) {
   // (SoundScreen의 preset을 dependency로 하는 useEffect와 연결됨)
   const handlePress = async (item) => {
     try {
-      // navigation.navigate("soundsScreen", {
-      //   // item: item,
-      //   presetsData: item.presetsData,
-      //   // playStory: true,
+      setItem(item);
+      setStoryModalVisible();
+      // navigation.navigate("storyPlayScreen", {
+      //   item: item,
       // });
-      navigation.navigate("storyPlayScreen", {
-        item: item,
-      });
     } catch (error) {
       console.log(error);
     }
@@ -92,14 +94,28 @@ function StoryListScreen({ navigation }) {
         style={styles.imageBackground}
         resizeMode="cover"
       >
-        <TouchableOpacity
-          onPress={() => handlePress(item)}
-          style={[styles.soundCard]}
+        <LinearGradient
+          colors={["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 0.5)"]} // Gradient colors from transparent to semi-transparent black
+          style={styles.gradient}
         >
-          <Text style={[styles.text, { color: "#000" }]}>{item.name}</Text>
-          <Feather name="clock" size={24} color="black" />
-          <Text style={[styles.text, { color: "#000" }]}>{item.duration}</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => handlePress(item)}
+            style={[styles.soundCard]}
+          >
+            <View style={[defaultStyles.rowContainer, styles.pill]}>
+              <Text style={[defaultStyles.storyThumbnailSubTitle]}>
+                <Text style={{ fontFamily: "IBMPlexSansRegular" }}>
+                  {item.duration}
+                </Text>
+                min
+              </Text>
+            </View>
+
+            <Text style={[defaultStyles.storyTumbnailTitle]}>
+              {item.name.replace(/\\n/g, "\n")}
+            </Text>
+          </TouchableOpacity>
+        </LinearGradient>
       </ImageBackground>
     );
   };
@@ -108,8 +124,18 @@ function StoryListScreen({ navigation }) {
     <Screen style={styles.screen}>
       <View style={styles.container}>
         <View style={styles.topBar}>
-          <Text style={styles.screenHeader}>Nighttime {`\n`}Stories</Text>
+          <Text style={defaultStyles.screenHeader}>
+            Nighttime {`\n`}Stories
+          </Text>
         </View>
+
+        {item && (
+          <StoryPlayModal
+            modalVisible={storyModalVisible}
+            setModalVisible={setStoryModalVisible}
+            item={item}
+          />
+        )}
 
         <NameModal
           modalVisible={modalVisible}
@@ -127,7 +153,7 @@ function StoryListScreen({ navigation }) {
           data={data}
           keyExtractor={(index) => index}
           renderItem={renderItem}
-        ></FlatList>
+        />
       </View>
     </Screen>
   );
@@ -145,38 +171,37 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
   },
-  // topBar: {
-  //   flexDirection: "row",
-  //   alignItems: "center",
-  //   justifyContent: "space-between",
-  // },
-  screenHeader: {
-    fontSize: 50,
-    color: "#fff",
-    marginBottom: 40,
-    marginLeft: 6,
-  },
   row: {
     // flex: 1,
     justifyContent: "space-between",
     marginVertical: 15,
   },
+  gradient: {
+    borderRadius: 24,
+  },
   soundCard: {
     width: 150,
-    height: 169,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 10,
+    height: 170,
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    padding: 14,
   },
   text: {
     color: "black",
+    textAlign: "center",
   },
   imageBackground: {
     // flex: 1,
     width: 150,
-    height: 169,
+    height: 170,
     borderRadius: 10,
     overflow: "hidden",
+  },
+  pill: {
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    borderRadius: 8,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
   },
 });
 

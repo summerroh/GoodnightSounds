@@ -5,11 +5,12 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Feather } from "@expo/vector-icons";
+import { useFonts } from "expo-font";
 
 import SoundsScreen from "./app/screens/SoundsScreen";
 import PresetScreen from "./app/screens/PresetScreen";
 import StoryListScreen from "./app/screens/StoryListScreen";
-import StoryPlayScreen from "./app/screens/StoryPlayScreen";
+// import StoryPlayScreen from "./app/screens/StoryPlayScreen";
 
 import { MyContext } from "./MyContext";
 import { db } from "./firebaseConfig";
@@ -22,6 +23,14 @@ const Tab = createBottomTabNavigator();
 export default function App() {
   const [presetImages, setPresetImages] = useState("Hi there");
   const value = { presetImages, setPresetImages };
+
+  // 폰트 로딩
+  let [fontsLoaded] = useFonts({
+    IBMPlexSansThin: require("./assets/fonts/IBMPlexSans/IBMPlexSans-Thin.ttf"),
+    IBMPlexSansLight: require("./assets/fonts/IBMPlexSans/IBMPlexSans-Light.ttf"),
+    IBMPlexSansRegular: require("./assets/fonts/IBMPlexSans/IBMPlexSans-Regular.ttf"),
+    IBMPlexSansMedium: require("./assets/fonts/IBMPlexSans/IBMPlexSans-Medium.ttf"),
+  });
 
   useEffect(() => {
     return () => {
@@ -48,9 +57,13 @@ export default function App() {
         }}
       >
         <Stack.Screen name="storyListScreen" component={StoryListScreen} />
-        <Stack.Screen name="storyPlayScreen" component={StoryPlayScreen} />
+        {/* <Stack.Screen name="storyPlayScreen" component={StoryPlayScreen} /> */}
       </Stack.Navigator>
     );
+  }
+
+  if (!fontsLoaded) {
+    return null;
   }
 
   return (
@@ -139,10 +152,10 @@ export default function App() {
 
           {/* <Stack.Screen name="soundsScreen" component={SoundsScreen} />
           <Stack.Screen
-            name="presetScreen"
-            component={PresetScreen}
-            options={{
-              animation: "slide_from_right",
+          name="presetScreen"
+          component={PresetScreen}
+          options={{
+            animation: "slide_from_right",
             }}
           /> */}
         </Tab.Navigator>

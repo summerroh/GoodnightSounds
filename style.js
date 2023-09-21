@@ -9,6 +9,10 @@ const colors = {
   primary: "#212133",
   secondary: "#353546",
   highlight: "#231D68",
+  grey: {
+    100: "#8D8D8D",
+    200: "#7A7A8E",
+  },
 };
 const defaultStyles = {
   screenWidth,
@@ -71,7 +75,51 @@ const defaultStyles = {
   ml30: {
     marginLeft: 30,
   },
-  //
+  // fonts
+  screenHeader: {
+    fontSize: 50,
+    color: "#fff",
+    marginBottom: 40,
+    marginLeft: 6,
+    fontFamily: "IBMPlexSansThin",
+  },
+  storyTitle: {
+    fontSize: 50,
+    color: "#fff",
+    marginBottom: 14,
+    marginLeft: 6,
+    fontFamily: "IBMPlexSansThin",
+  },
+  storySubTitle: {
+    color: colors.grey[200],
+    fontSize: 24,
+    fontWeight: "100",
+    marginLeft: 4,
+    fontFamily: "IBMPlexSansLight",
+  },
+  storyTumbnailTitle: {
+    fontSize: 22,
+    color: "#fff",
+    fontFamily: "IBMPlexSansMedium",
+  },
+  storyThumbnailSubTitle: {
+    fontSize: 15,
+    color: "#fff",
+    fontFamily: "IBMPlexSansLight",
+  },
+  soundCardHeader: {
+    fontSize: 20,
+    color: "#fff",
+    marginTop: 20,
+    marginBottom: 8,
+    fontFamily: "IBMPlexSansThin",
+  },
+  soundCard: {
+    fontSize: 14,
+    color: "#000",
+    fontFamily: "IBMPlexSansLight",
+    textAlign: "center",
+  },
 };
 
 export default defaultStyles;
