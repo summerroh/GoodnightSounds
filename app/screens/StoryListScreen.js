@@ -16,12 +16,15 @@ import { LinearGradient } from "expo-linear-gradient";
 import { db } from "../../firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 
+import { useStoryPlaying } from "../context/StoryContext";
 import Screen from "../components/Screen";
 import NameModal from "../components/NameModal";
 import defaultStyles from "../../style";
 import StoryPlayModal from "../components/StoryPlayModal";
 
-function StoryListScreen({ navigation }) {
+function StoryListScreen({}) {
+  const { setIsStoryPlaying } = useStoryPlaying();
+
   const [presetData, setPresetData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [storyModalVisible, setStoryModalVisible] = useState(false);
@@ -34,6 +37,13 @@ function StoryListScreen({ navigation }) {
     getData();
     return () => setItem(null);
   }, []);
+
+  // 스토리가 플레이되면, Story Context에 isStoryPlaying을 true로 설정하고,
+  // 스토리가 꺼지면 Story Context에 isStoryPlaying을 false로 설정하기
+  useEffect(() => {
+    setIsStoryPlaying(storyModalVisible);
+    return () => {};
+  }, [storyModalVisible]);
 
   // Firestore에서 stories 데이터 받아오기
   const getData = async () => {
@@ -51,7 +61,7 @@ function StoryListScreen({ navigation }) {
   const handlePress = async (item) => {
     try {
       setItem(item);
-      setStoryModalVisible();
+      setStoryModalVisible(true);
       // navigation.navigate("storyPlayScreen", {
       //   item: item,
       // });

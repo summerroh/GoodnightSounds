@@ -5,8 +5,10 @@ import { Text, TouchableOpacity } from "react-native";
 import { Audio } from "expo-av";
 import { Slider } from "@miblanchard/react-native-slider";
 import defaultStyles from "../../style";
-import { useFocusEffect, useIsFocused } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 import { useNavigationState } from "@react-navigation/native";
+
+import { useStoryPlaying } from "../context/StoryContext";
 
 function Sound({
   itemName,
@@ -16,6 +18,7 @@ function Sound({
   saveClicked,
   preset,
 }) {
+  const { isStoryPlaying } = useStoryPlaying();
   const [soundObj, setSoundObj] = useState(new Audio.Sound());
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(0);
@@ -31,10 +34,10 @@ function Sound({
 
   // Use the current route name to check if the screen is "StoryStack" and stop the sound accordingly
   useEffect(() => {
-    if (currentRouteName === "StoryStack") {
+    if (isStoryPlaying) {
       stopSound();
     }
-  }, [currentRouteName, isFocused]);
+  }, [isStoryPlaying, isFocused]);
 
   // Use the current screen name to check if it's "storyPlayScreen"
   // useEffect(() => {
@@ -49,9 +52,9 @@ function Sound({
     Audio.setAudioModeAsync({
       // allowsRecordingIOS: false,
       // interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
-      // playsInSilentModeIOS: true,
       // interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS,
-      shouldDuckAndroid: false,
+      playsInSilentModeIOS: true,
+      shouldDuckAndroid: true,
       staysActiveInBackground: true,
       playThroughEarpieceAndroid: false,
     }).catch(console.error);
