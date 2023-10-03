@@ -2,7 +2,6 @@
 
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import { View, StyleSheet, Image } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Text, TouchableOpacity } from "react-native";
 import { Audio } from "expo-av";
 import { Slider } from "@miblanchard/react-native-slider";

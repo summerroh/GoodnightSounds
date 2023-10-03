@@ -5,7 +5,6 @@ import { Audio } from "expo-av";
 import { Slider } from "@miblanchard/react-native-slider";
 import defaultStyles from "../../style";
 import { useIsFocused } from "@react-navigation/native";
-import { useNavigationState } from "@react-navigation/native";
 
 import { useStoryPlaying } from "../context/StoryContext";
 
@@ -25,7 +24,6 @@ function Sound({
   // saveClicked dependency로 들어간 useEffect가 첫 렌더시에 실행되지 않게 해줌
   const firstRender = useRef(true);
   const isFocused = useIsFocused();
-  const navigationState = useNavigationState((state) => state);
 
   // Use the current route name to check if the screen is "StoryStack" and stop the sound accordingly
   useEffect(() => {
