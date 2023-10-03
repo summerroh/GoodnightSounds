@@ -1,3 +1,5 @@
+// 10월 3일 background task 구현하기 전의 working code
+
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import { View, StyleSheet, Image } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -56,7 +58,6 @@ function StorySound({ itemName, itemMusic, iconUri }) {
       { uri: audio },
       { shouldPlay: true, isLooping: true }
     );
-
     await soundObj.setVolumeAsync(0.5);
   };
 
