@@ -56,6 +56,7 @@ function StorySound({ itemName, itemMusic, iconUri }) {
       { uri: audio },
       { shouldPlay: true, isLooping: true }
     );
+
     await soundObj.setVolumeAsync(0.5);
   };
 
