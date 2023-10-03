@@ -87,11 +87,13 @@ const defaultStyles = {
     fontFamily: "IBMPlexSansThin",
   },
   storyTitle: {
-    fontSize: 50,
+    fontSize: 48,
     color: "#fff",
     marginBottom: 14,
     marginLeft: 6,
     fontFamily: "IBMPlexSansThin",
+    width: "70%",
+    textAlign: "center",
   },
   storySubTitle: {
     color: colors.grey[200],
@@ -101,9 +103,9 @@ const defaultStyles = {
     fontFamily: "IBMPlexSansLight",
   },
   storyTumbnailTitle: {
-    fontSize: 22,
+    fontSize: 20,
     color: "#fff",
-    fontFamily: "IBMPlexSansMedium",
+    fontFamily: "IBMPlexSansRegular",
   },
   storyThumbnailSubTitle: {
     fontSize: 15,

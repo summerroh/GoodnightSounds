@@ -25,20 +25,25 @@ context써도 계속 청구되는건가 이미지 한번 볼때마다?
 영상 내용은 하루에 딱 한번 데이터를 fetch해 와서 cache에 넣어 쓰는거임)
 Firebase Storage(image 데이터들)는 cache를 구현 할 수 있나 보기
 
-프리셋 이미지도 이미지별로 ID 가 있어야 할듯 그래야 나중에 이미지를 바꿔서 url이 바뀌어도 ID로 불러올 수 있게
-App.js에서 프리셋 이미지를 firebase storage에서 url로 받아오고 ID별로 import? 저장 해준다.
-const ID = "url..." 이렇게
-그리고 이거를 context에 넣어주고 다른 스크린에서는 context에서 ID로 이미지를 불러와 사용한다.
+
 
 작업중인 사항
-SoundCard 아이콘을 소리마다 만들기
-SoundCard 아이콘 추가하고 서버에서 불러오기??
 
 추가해야 할 기능들
 스토리 보이스 목소리 볼륨 조절
 스토리 보이스 일시정지 기능
 사운드 일시정지 기능
 
+고쳐야 할 사항들
+forest loop 더 자연스럽게
+
 
 오류
 반복재생이 무한정 되어야하는데 일정 시간 이후 꺼짐 소리들이
+
+스토리 재생중 22:58쯤에 train소리가 멈춤, forest는 아직 재생중, 폰 화면이 꺼져있었음
+30분에 Forest도 꺼짐. 화면도꺼져있었음
+->react-native-foreground-service or https://www.npmjs.com/package/react-native-background-actions
+
+화면이 계속 켜져있게해야하나?
+

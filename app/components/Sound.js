@@ -1,6 +1,5 @@
-import React, { useRef, useState, useEffect, useCallback } from "react";
-import { View, StyleSheet, Button } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import React, { useRef, useState, useEffect } from "react";
+import { View, StyleSheet, Image } from "react-native";
 import { Text, TouchableOpacity } from "react-native";
 import { Audio } from "expo-av";
 import { Slider } from "@miblanchard/react-native-slider";
@@ -13,7 +12,7 @@ import { useStoryPlaying } from "../context/StoryContext";
 function Sound({
   itemName,
   itemMusic,
-  iconName,
+  iconUri,
   setSelectedItem,
   saveClicked,
   preset,
@@ -22,15 +21,11 @@ function Sound({
   const [soundObj, setSoundObj] = useState(new Audio.Sound());
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(0);
-  // 새 preset이 들어왔을때 기존 preset을 리셋해주기 위한 state
-  // const [presetList, setPresetList] = useState([]);
-  // const [currentScreen, setCurrentScreen] = useState("");
 
   // saveClicked dependency로 들어간 useEffect가 첫 렌더시에 실행되지 않게 해줌
   const firstRender = useRef(true);
   const isFocused = useIsFocused();
   const navigationState = useNavigationState((state) => state);
-  const currentRouteName = navigationState.routes[navigationState.index].name;
 
   // Use the current route name to check if the screen is "StoryStack" and stop the sound accordingly
   useEffect(() => {
@@ -39,21 +34,12 @@ function Sound({
     }
   }, [isStoryPlaying, isFocused]);
 
-  // Use the current screen name to check if it's "storyPlayScreen"
-  // useEffect(() => {
-  //   console.log("currentScreen", currentScreen);
-  //   if (currentScreen === "storyPlayScreen") {
-  //     stopSound();
-  //     console.log("STOPPPPPPPPP");
-  //   }
-  // }, [currentScreen]);
-
   useEffect(() => {
     Audio.setAudioModeAsync({
-      // allowsRecordingIOS: false,
+      allowsRecordingIOS: false,
       // interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
-      // interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS,
       playsInSilentModeIOS: true,
+      // interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
       shouldDuckAndroid: true,
       staysActiveInBackground: true,
       playThroughEarpieceAndroid: false,
@@ -173,11 +159,20 @@ function Sound({
           },
         ]}
       >
-        <MaterialCommunityIcons
-          name={iconName}
-          size={20}
-          color={isPlaying ? defaultStyles.colors.white : "#fff"}
-        />
+        {iconUri && (
+          <Image
+            source={{
+              uri: iconUri,
+            }}
+            style={{
+              width: 22,
+              height: 22,
+              marginBottom: 4,
+              resizeMode: "contain",
+            }}
+          />
+        )}
+
         <Text
           style={[
             defaultStyles.soundCard,

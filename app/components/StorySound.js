@@ -1,16 +1,13 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
-import { View, StyleSheet, Button } from "react-native";
+import { View, StyleSheet, Image } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Text, TouchableOpacity } from "react-native";
 import { Audio } from "expo-av";
 import { Slider } from "@miblanchard/react-native-slider";
 import defaultStyles from "../../style";
-import { useFocusEffect, useIsFocused } from "@react-navigation/native";
-// import { BlurView } from "@react-native-community/blur";
-// import { BlurView } from "expo-blur";
-import { useNavigationState } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 
-function StorySound({ itemName, itemMusic, iconName, preset }) {
+function StorySound({ itemName, itemMusic, iconUri }) {
   const [soundObj, setSoundObj] = useState(new Audio.Sound());
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(0.5);
@@ -28,11 +25,11 @@ function StorySound({ itemName, itemMusic, iconName, preset }) {
 
   useEffect(() => {
     Audio.setAudioModeAsync({
-      // allowsRecordingIOS: false,
-      // interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
-      // playsInSilentModeIOS: true,
-      // interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS,
-      shouldDuckAndroid: false,
+      allowsRecordingIOS: false,
+      // interruptionModeIOS: Audio.InterruptionModeIOS.DoNotMix,
+      playsInSilentModeIOS: true,
+      // interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
+      shouldDuckAndroid: true,
       staysActiveInBackground: true,
       playThroughEarpieceAndroid: false,
     }).catch(console.error);
@@ -48,14 +45,18 @@ function StorySound({ itemName, itemMusic, iconName, preset }) {
     setVolume(0.5);
 
     if (!isPlaying) {
-      await soundObj.loadAsync(
-        { uri: audio },
-        { shouldPlay: true, isLooping: true }
-      );
-      await soundObj.setVolumeAsync(0.5);
+      playAudioInBackground(audio);
     } else {
       await soundObj.unloadAsync();
     }
+  };
+
+  const playAudioInBackground = async (audio) => {
+    await soundObj.loadAsync(
+      { uri: audio },
+      { shouldPlay: true, isLooping: true }
+    );
+    await soundObj.setVolumeAsync(0.5);
   };
 
   const volumeControl = async (value) => {
@@ -73,23 +74,34 @@ function StorySound({ itemName, itemMusic, iconName, preset }) {
         style={[
           styles.soundCard,
           {
-            backgroundColor: isPlaying ? "#fff" : defaultStyles.colors.primary,
-            borderColor: isPlaying ? defaultStyles.colors.primary : "#fff",
+            borderColor: isPlaying
+              ? defaultStyles.colors.white
+              : defaultStyles.colors.grey[200],
           },
+          isPlaying && { backgroundColor: defaultStyles.colors.secondary },
         ]}
       >
-        <MaterialCommunityIcons
-          name={iconName}
-          size={20}
-          color={isPlaying ? defaultStyles.colors.primary : "#fff"}
-        />
+        {iconUri && (
+          <Image
+            source={{
+              uri: iconUri,
+            }}
+            style={{
+              width: 22,
+              height: 22,
+              // marginBottom: 4,
+              resizeMode: "contain",
+            }}
+          />
+        )}
+
         <Text
           style={[
-            styles.text,
-            { color: isPlaying ? defaultStyles.colors.primary : "#fff" },
+            defaultStyles.soundCard,
+            { color: isPlaying ? defaultStyles.colors.white : "#fff" },
           ]}
         >
-          {itemName}
+          {itemName.replace(/\\n/g, "\n")}
         </Text>
       </TouchableOpacity>
       {isPlaying && (
@@ -115,10 +127,8 @@ function StorySound({ itemName, itemMusic, iconName, preset }) {
 
 const styles = StyleSheet.create({
   soundCard: {
-    backgroundColor: "#fff",
-    // backgroundColor: "#ffffff80", // white의 alpha값 50%
-    width: 70,
-    height: 70,
+    width: 76,
+    height: 76,
     borderRadius: 24,
     alignItems: "center",
     justifyContent: "center",

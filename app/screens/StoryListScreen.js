@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
   imageBackground: {
     width: 150,
     height: 170,
-    borderRadius: 10,
+    borderRadius: 24,
     overflow: "hidden",
   },
   pill: {

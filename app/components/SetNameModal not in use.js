@@ -23,14 +23,14 @@ export default function SetNameModal({
   currentItem,
 }) {
   // /assets/presets 폴더에 있는 이미지들 전부 불러오기
-  const importAll = (r) => {
-    return r.keys().map(r);
-  };
+  // const importAll = (r) => {
+  //   return r.keys().map(r);
+  // };
 
   // Import all PNG images from the assets/presets directory
-  const images = importAll(
-    require.context("../../assets/presets", false, /\.(png)$/)
-  );
+  // const images = importAll(
+  //   require.context("../../assets/presets", false, /\.(png)$/)
+  // );
 
   return (
     <Modal

@@ -99,7 +99,7 @@ function SoundsScreen({ navigation, route }) {
       <Sound
         itemName={item.name}
         itemMusic={item.sound}
-        iconName={item.iconName}
+        iconUri={item.iconUri}
         setSelectedItem={setSelectedItem}
         saveClicked={saveClicked}
         preset={preset}

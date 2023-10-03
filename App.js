@@ -17,6 +17,27 @@ import { StoryProvider } from "./app/context/StoryContext";
 import { db } from "./firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 import defaultStyles from "./style";
+import * as TaskManager from "expo-task-manager";
+
+const TASK_NAME = "audioLoopTask";
+
+// Define your background task
+TaskManager.defineTask(TASK_NAME, ({ error }) => {
+  console.log("AA");
+  if (error) {
+    console.error("Task error:", error);
+    return;
+  }
+
+  try {
+    console.log("CC");
+    // playAudioInBackground(itemMusic);
+    // return TaskManager.TaskResult.Running; // Keep the task running
+  } catch (error) {
+    console.log(error);
+    // return TaskManager.TaskResult.Failed; // Handle errors
+  }
+});
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();

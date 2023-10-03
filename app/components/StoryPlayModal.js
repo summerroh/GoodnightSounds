@@ -1,4 +1,11 @@
-import { View, Text, FlatList, StyleSheet, Modal } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  Modal,
+  ImageBackground,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { Audio } from "expo-av";
 import * as FileSystem from "expo-file-system";
@@ -114,7 +121,7 @@ export default function StoryPlayModal({
         <StorySound
           itemName={item.name}
           itemMusic={item.sound}
-          iconName={item.iconName}
+          iconUri={item.iconUri}
           preset={preset}
         />
       </View>
@@ -129,50 +136,55 @@ export default function StoryPlayModal({
         setCloseModalVisible(true);
       }}
     >
-      <View style={styles.topContainer}>
-        <EvilIcons
-          name="close"
-          size={40}
-          color={defaultStyles.colors.grey[100]}
-          style={styles.xIcon}
-          onPress={() => setCloseModalVisible(true)}
-        />
-        <Text style={defaultStyles.storyTitle}>
-          {item.name.replace(/\\n/g, "\n")}
-        </Text>
-
-        <View style={defaultStyles.rowContainer}>
-          <Feather
-            name="clock"
-            size={18}
-            color={defaultStyles.colors.grey[200]}
-            style={{ marginTop: 3 }}
+      <ImageBackground
+        source={{ uri: item.imageUrl }}
+        style={styles.backgroundImage}
+      >
+        <View style={styles.topContainer}>
+          <EvilIcons
+            name="close"
+            size={40}
+            color={defaultStyles.colors.grey[100]}
+            style={styles.xIcon}
+            onPress={() => setCloseModalVisible(true)}
           />
-          <Text style={defaultStyles.storySubTitle}>
-            <Text style={{ fontFamily: "IBMPlexSansRegular" }}>
-              {item.duration}
-            </Text>
-            min
+          <Text style={defaultStyles.storyTitle}>
+            {item.name.replace(/\\n/g, "\n")}
           </Text>
-        </View>
-      </View>
-      <View style={styles.bottomContainer}>
-        <FlatList
-          numColumns={3}
-          columnWrapperStyle={styles.row}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          data={item.soundsData}
-          keyExtractor={(Item) => Item.name}
-          renderItem={renderItem}
-        />
-      </View>
 
-      <CloseModal
-        modalVisible={closeModalVisible}
-        setModalVisible={setCloseModalVisible}
-        onConfirm={handleConfirmLeave}
-      />
+          <View style={defaultStyles.rowContainer}>
+            <Feather
+              name="clock"
+              size={18}
+              color={defaultStyles.colors.grey[200]}
+              style={{ marginTop: 3 }}
+            />
+            <Text style={defaultStyles.storySubTitle}>
+              <Text style={{ fontFamily: "IBMPlexSansRegular" }}>
+                {item.duration}
+              </Text>
+              min
+            </Text>
+          </View>
+        </View>
+        <View style={styles.bottomContainer}>
+          <FlatList
+            numColumns={3}
+            columnWrapperStyle={styles.row}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            data={item.soundsData}
+            keyExtractor={(Item) => Item.name}
+            renderItem={renderItem}
+          />
+        </View>
+
+        <CloseModal
+          modalVisible={closeModalVisible}
+          setModalVisible={setCloseModalVisible}
+          onConfirm={handleConfirmLeave}
+        />
+      </ImageBackground>
     </Modal>
   );
 }
@@ -182,12 +194,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: defaultStyles.colors.primary,
+    backgroundColor: "rgba(33, 33, 51, 0.85)",
+    // backgroundColor: defaultStyles.colors.primary,
   },
   bottomContainer: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: defaultStyles.colors.primary,
+    backgroundColor: "rgba(33, 33, 51, 0.85)",
+    // backgroundColor: defaultStyles.colors.primary,
   },
   row: {
     justifyContent: "center",
@@ -201,5 +215,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 20,
     right: 20,
+  },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center",
+    // backgroundColor: "red",
   },
 });
