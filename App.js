@@ -12,7 +12,6 @@ import PresetScreen from "./app/screens/PresetScreen";
 import StoryListScreen from "./app/screens/StoryListScreen";
 // import StoryPlayScreen from "./app/screens/StoryPlayScreen";
 
-import { MyContext } from "./app/context/MyContext";
 import { StoryProvider } from "./app/context/StoryContext";
 import { db } from "./firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
@@ -68,91 +67,90 @@ export default function App() {
   }
 
   return (
-    <MyContext.Provider value={value}>
-      <StoryProvider>
-        <NavigationContainer>
-          <Tab.Navigator
-            screenOptions={{
-              headerShown: false,
-              tabBarActiveTintColor: defaultStyles.colors.white,
-              // tabBarInactiveTintColor: defaultStyles.colors.primary,
-              tabBarItemStyle: { marginVertical: 6 },
-              tabBarStyle: {
-                height: 56,
-                backgroundColor: defaultStyles.colors.secondary,
+    <StoryProvider>
+      <NavigationContainer>
+        <Tab.Navigator
+          screenOptions={{
+            headerShown: false,
+            tabBarActiveTintColor: defaultStyles.colors.white,
+            // tabBarInactiveTintColor: defaultStyles.colors.primary,
+            tabBarItemStyle: { marginVertical: 6 },
+            tabBarStyle: {
+              height: 56,
+              backgroundColor: defaultStyles.colors.secondary,
+            },
+          }}
+        >
+          <Tab.Screen
+            name="StoryStack"
+            component={StoryStack}
+            options={{
+              tabBarLabel: "Stories",
+              tabBarIcon: ({ focused }) => {
+                return focused ? (
+                  <Feather
+                    name="book-open"
+                    size={30}
+                    color={defaultStyles.colors.white}
+                  />
+                ) : (
+                  <Feather
+                    name="book-open"
+                    size={24}
+                    color={defaultStyles.colors.primary}
+                  />
+                );
               },
             }}
-          >
-            <Tab.Screen
-              name="StoryStack"
-              component={StoryStack}
-              options={{
-                tabBarLabel: "Stories",
-                tabBarIcon: ({ focused }) => {
-                  return focused ? (
-                    <Feather
-                      name="book-open"
-                      size={30}
-                      color={defaultStyles.colors.white}
-                    />
-                  ) : (
-                    <Feather
-                      name="book-open"
-                      size={24}
-                      color={defaultStyles.colors.primary}
-                    />
-                  );
-                },
-              }}
-            />
+          />
 
-            <Tab.Screen
-              name="soundsScreen"
-              component={SoundsScreen}
-              options={{
-                tabBarLabel: "Sounds",
-                tabBarIcon: ({ focused }) => {
-                  return focused ? (
-                    <Feather
-                      name="headphones"
-                      size={30}
-                      color={defaultStyles.colors.white}
-                    />
-                  ) : (
-                    <Feather
-                      name="headphones"
-                      size={24}
-                      color={defaultStyles.colors.primary}
-                    />
-                  );
-                },
-              }}
-            />
+          <Tab.Screen
+            name="soundsScreen"
+            component={SoundsScreen}
+            options={{
+              tabBarLabel: "Sounds",
+              tabBarIcon: ({ focused }) => {
+                return focused ? (
+                  <Feather
+                    name="headphones"
+                    size={30}
+                    color={defaultStyles.colors.white}
+                  />
+                ) : (
+                  <Feather
+                    name="headphones"
+                    size={24}
+                    color={defaultStyles.colors.primary}
+                  />
+                );
+              },
+            }}
+          />
 
-            <Tab.Screen
-              name="presetScreen"
-              component={PresetScreen}
-              options={{
-                tabBarLabel: "Presets",
-                tabBarIcon: ({ focused }) => {
-                  return focused ? (
-                    <Feather
-                      name="bookmark"
-                      size={30}
-                      color={defaultStyles.colors.white}
-                    />
-                  ) : (
-                    <Feather
-                      name="bookmark"
-                      size={24}
-                      color={defaultStyles.colors.primary}
-                    />
-                  );
-                },
-              }}
-            />
+          <Tab.Screen
+            name="presetScreen"
+            component={PresetScreen}
+            options={{
+              tabBarLabel: "Presets",
+              tabBarIcon: ({ focused }) => {
+                return focused ? (
+                  <Feather
+                    name="bookmark"
+                    size={30}
+                    color={defaultStyles.colors.white}
+                  />
+                ) : (
+                  <Feather
+                    name="bookmark"
+                    size={24}
+                    color={defaultStyles.colors.primary}
+                  />
+                );
+              },
+            }}
+          />
 
-            {/* <Stack.Screen name="soundsScreen" component={SoundsScreen} />
+          {/* <Stack.Screen name="soundsScreen" component={SoundsScreen} />
           <Stack.Screen
           name="presetScreen"
           component={PresetScreen}
@@ -160,11 +158,10 @@ export default function App() {
             animation: "slide_from_right",
             }}
           /> */}
-          </Tab.Navigator>
-          {/* </Stack.Navigator> */}
-        </NavigationContainer>
-      </StoryProvider>
-    </MyContext.Provider>
+        </Tab.Navigator>
+        {/* </Stack.Navigator> */}
+      </NavigationContainer>
+    </StoryProvider>
   );
 }
 
