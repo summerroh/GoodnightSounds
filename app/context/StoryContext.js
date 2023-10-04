@@ -2,7 +2,7 @@
 // Checking if the story is playing or not
 // use it to stop the sounds while the story is playing
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState } from 'react';
 
 const StoryPlayingContext = createContext();
 
