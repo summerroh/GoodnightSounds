@@ -27,7 +27,11 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#212133"
       },
-      "package": "com.summerroh.GoodnightSounds"
+      "package": "com.summerroh.GoodnightSounds",
+      "permissions": [
+        "REQUEST_IGNORE_BATTERY_OPTIMIZATIONS",
+        "FOREGROUND_SERVICE"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"

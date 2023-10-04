@@ -98,14 +98,22 @@ export default function App() {
             name="soundsScreen"
             component={SoundsScreen}
             options={{
-              tabBarLabel: 'Sounds',
+              tabBarLabel: "Sounds",
               tabBarIcon: ({ focused }) => {
                 return focused ? (
-                  <Feather name="headphones" size={30} color={defaultStyles.colors.white} />
+                  <Feather
+                    name="headphones"
+                    size={30}
+                    color={defaultStyles.colors.white}
+                  />
                 ) : (
-                  <Feather name="headphones" size={24} color={defaultStyles.colors.primary} />
+                  <Feather
+                    name="headphones"
+                    size={24}
+                    color={defaultStyles.colors.primary}
+                  />
                 );
-              }
+              },
             }}
           />
 
@@ -113,14 +121,22 @@ export default function App() {
             name="presetScreen"
             component={PresetScreen}
             options={{
-              tabBarLabel: 'Presets',
+              tabBarLabel: "Presets",
               tabBarIcon: ({ focused }) => {
                 return focused ? (
-                  <Feather name="bookmark" size={30} color={defaultStyles.colors.white} />
+                  <Feather
+                    name="bookmark"
+                    size={30}
+                    color={defaultStyles.colors.white}
+                  />
                 ) : (
-                  <Feather name="bookmark" size={24} color={defaultStyles.colors.primary} />
+                  <Feather
+                    name="bookmark"
+                    size={24}
+                    color={defaultStyles.colors.primary}
+                  />
                 );
-              }
+              },
             }}
           />
 
