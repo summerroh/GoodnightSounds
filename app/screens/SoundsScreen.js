@@ -11,6 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { db } from "../../firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 import VIForegroundService from "@voximplant/react-native-foreground-service";
+import MusicControl from "react-native-music-control";
 
 import { Entypo, Feather } from "@expo/vector-icons";
 
@@ -19,6 +20,7 @@ import Sound from "../components/Sound";
 import SetNameModal from "../components/SetNameModal";
 import { useFocusEffect } from "@react-navigation/native";
 import defaultStyles from "../../style";
+import { Button } from "react-native";
 
 function SoundsScreen({ navigation, route }) {
   const [selectedItem, setSelectedItem] = useState([]);
@@ -38,43 +40,64 @@ function SoundsScreen({ navigation, route }) {
 
   useEffect(() => {
     getData();
-    createChannel();
+    // createChannel();
 
     return () => {};
   }, []);
 
   ///// Create a Notification Channel for Foreground Service /////
-  const createChannel = async () => {
-    const channelConfig = {
-      id: "channelId",
-      name: "Channel name",
-      description: "Channel description",
-      enableVibration: false,
-    };
-    await VIForegroundService.getInstance().createNotificationChannel(
-      channelConfig
-    );
+  // const createChannel = async () => {
+  //   const channelConfig = {
+  //     id: "channelId",
+  //     name: "Channel name",
+  //     description: "Channel description",
+  //     enableVibration: false,
+  //   };
+  //   await VIForegroundService.getInstance().createNotificationChannel(
+  //     channelConfig
+  //   );
 
-    const startForegroundService = async () => {
-      const notificationConfig = {
-        channelId: "channelId",
-        id: 3456,
-        title: "Title",
-        text: "Some text",
-        icon: "ic_icon",
-        button: "Some text",
-      };
-      try {
-        await VIForegroundService.getInstance().startService(
-          notificationConfig
-        );
-      } catch (e) {
-        console.error(e);
-      }
-    };
-    startForegroundService();
-  };
+  //   const startForegroundService = async () => {
+  //     const notificationConfig = {
+  //       channelId: "channelId",
+  //       id: 3456,
+  //       title: "Title",
+  //       text: "Some text",
+  //       icon: "ic_icon",
+  //       button: "Some text",
+  //     };
+  //     try {
+  //       await VIForegroundService.getInstance().startService(
+  //         notificationConfig
+  //       );
+  //     } catch (e) {
+  //       console.error(e);
+  //     }
+  //   };
+  //   startForegroundService();
+  // };
   /////
+
+  ///// react-native-music-control /////
+  const setMusicControl = () => {
+    console.log("set music control");
+    MusicControl.setNowPlaying({
+      title: "Billie Jean",
+      artwork: "https://i.imgur.com/e1cpwdo.png", // URL or RN's image require()
+      artist: "Michael Jackson",
+      album: "Thriller",
+      genre: "Post-disco, Rhythm and Blues, Funk, Dance-pop",
+      duration: 294, // (Seconds)
+      description: "", // Android Only
+      color: 0xffffff, // Android Only - Notification Color
+      colorized: true, // Android 8+ Only - Notification Color extracted from the artwork. Set to false to use the color property instead
+      date: "1983-01-02T00:00:00Z", // Release Date (RFC 3339) - Android Only
+      rating: 84, // Android Only (Boolean or Number depending on the type)
+      notificationIcon: "my_custom_icon", // Android Only (String), Android Drawable resource name for a custom notification icon
+      isLiveStream: true, // iOS Only (Boolean), Show or hide Live Indicator instead of seekbar on lock screen for live streams. Default value is false.
+    });
+  };
+  ///////////
 
   // Firestore에서 sounds 데이터 받아오기
   const getData = async () => {
@@ -227,6 +250,10 @@ function SoundsScreen({ navigation, route }) {
           <Feather name="heart" size={24} color="#fff" />
           <Text style={styles.subText}>Save</Text>
         </TouchableOpacity>
+        <Button
+          title={"set music control"}
+          onPress={() => setMusicControl()}
+        ></Button>
       </View>
     </Screen>
   );
