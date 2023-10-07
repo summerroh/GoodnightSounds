@@ -10,6 +10,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { db } from "../../firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
+import VIForegroundService from "@voximplant/react-native-foreground-service";
 
 import { Entypo, Feather } from "@expo/vector-icons";
 
@@ -37,9 +38,43 @@ function SoundsScreen({ navigation, route }) {
 
   useEffect(() => {
     getData();
+    createChannel();
 
     return () => {};
   }, []);
+
+  ///// Create a Notification Channel for Foreground Service /////
+  const createChannel = async () => {
+    const channelConfig = {
+      id: "channelId",
+      name: "Channel name",
+      description: "Channel description",
+      enableVibration: false,
+    };
+    await VIForegroundService.getInstance().createNotificationChannel(
+      channelConfig
+    );
+
+    const startForegroundService = async () => {
+      const notificationConfig = {
+        channelId: "channelId",
+        id: 3456,
+        title: "Title",
+        text: "Some text",
+        icon: "ic_icon",
+        button: "Some text",
+      };
+      try {
+        await VIForegroundService.getInstance().startService(
+          notificationConfig
+        );
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    startForegroundService();
+  };
+  /////
 
   // Firestore에서 sounds 데이터 받아오기
   const getData = async () => {
@@ -70,6 +105,13 @@ function SoundsScreen({ navigation, route }) {
   }, [presetsData]);
 
   useEffect(() => {
+    console.log(selectedItem);
+    if (selectedItem.length > 0) {
+      console.log("sound is playing");
+    } else {
+      console.log("sound is not playing");
+    }
+
     // console.log(firstRender);
     if (firstRender.current === false && selectedItem.length > 0) {
       // storeData(selectedItem);
